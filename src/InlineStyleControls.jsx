@@ -10,6 +10,7 @@ const INLINE_STYLES = [
 
 function InlineStyleControls({ editorState, onToggle }) {
   const currentStyle = editorState.getCurrentInlineStyle();
+
   return (
     <div className="SynapseDraft-controls">
       {INLINE_STYLES.map(type =>

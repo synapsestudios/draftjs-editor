@@ -7,20 +7,13 @@ import {
   convertToRaw,
   convertFromRaw,
 } from 'draft-js';
-import { stateToHTML as convertToHTML } from 'draft-js-export-html';
-import { stateFromHTML as convertFromHTML } from 'draft-js-import-html';
-import { stateToMarkdown as convertToMarkdown } from 'draft-js-export-markdown';
-import { stateFromMarkdown as convertFromMarkdown } from 'draft-js-import-markdown';
 
 /* eslint-disable */
-const prebuiltRaw = {"entityMap":{},"blocks":[{"key":"au7ob","text":"RAW: Heading 1","type":"header-one","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"4ea5l","text":"And a blockquote","type":"blockquote","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"40cb9","text":"With a list","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"6r9r7","text":"And some items","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"6qt67","text":"Maybe another item","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"2lu4p","text":"And a secondary heading","type":"header-two","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"90cfp","text":"With a paragraph at the end to wrap it all up","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}; // eslint-disable-line
+const prebuiltRaw = {
+  "entityMap":{},
+  "blocks":[{"key":"au7ob","text":"RAW: Heading 1","type":"header-one","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"4ea5l","text":"And a blockquote","type":"blockquote","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"40cb9","text":"With a list","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"6r9r7","text":"And some items","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"6qt67","text":"Maybe another item","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"2lu4p","text":"And a secondary heading","type":"header-two","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"90cfp","text":"With a paragraph at the end to wrap it all up","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]
+};
 const contentStateFromRaw = convertFromRaw(prebuiltRaw);
-
-const prebuiltHTML = '<h1>HTML: Heading 1</h1>\n<blockquote>And a blockquote</blockquote>\n<ul>\n  <li>With a list</li>\n  <li>And some items</li>\n  <li>Maybe another item</li>\n</ul>\n<h2>And a secondary heading</h2>\n<p>With a paragraph at the end to wrap it all up</p>';
-const contentStateFromHTML = convertFromHTML(prebuiltHTML);
-
-const prebuiltMarkdown = '# MARKDOWN: Heading 1\n\n > And a blockquote\n\n- With a list\n- And some items\n- Maybe another item\n\n## And a secondary heading\n\nWith a paragraph at the end to wrap it all up\n';
-const contentStateFromMarkdown = convertFromMarkdown(prebuiltMarkdown);
 /* eslint-enable */
 
 import BlockStyleControls from './BlockStyleControls';
@@ -108,32 +101,6 @@ class SynapseDraft extends Component {
         <div>
           <button
             onClick={() => {
-              console.log(convertToRaw(contentState));
-              console.log(JSON.stringify(convertToRaw(contentState)));
-            }}
-          >
-            Convert To Raw
-          </button>
-          <button
-            onClick={() => {
-              console.log(convertToHTML(contentState));
-              console.log(JSON.stringify(convertToHTML(contentState)));
-            }}
-          >
-            Convert To HTML
-          </button>
-          <button
-            onClick={() => {
-              console.log(convertToMarkdown(contentState));
-              console.log(JSON.stringify(convertToMarkdown(contentState)));
-            }}
-          >
-            Convert To Markdown
-          </button>
-        </div>
-        <div>
-          <button
-            onClick={() => {
               this.setState({
                 editorState: EditorState.createWithContent(contentStateFromRaw),
               });
@@ -143,21 +110,11 @@ class SynapseDraft extends Component {
           </button>
           <button
             onClick={() => {
-              this.setState({
-                editorState: EditorState.createWithContent(contentStateFromHTML),
-              });
+              console.log(convertToRaw(contentState));
+              console.log(JSON.stringify(convertToRaw(contentState)));
             }}
           >
-            Load from Pre-defined HTML
-          </button>
-          <button
-            onClick={() => {
-              this.setState({
-                editorState: EditorState.createWithContent(contentStateFromMarkdown),
-              });
-            }}
-          >
-            Load from Pre-defined Markdown
+            Convert To Raw
           </button>
         </div>
       </div>
