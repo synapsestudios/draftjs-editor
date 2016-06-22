@@ -10,9 +10,9 @@ class StyleButton extends Component {
   }
 
   render() {
-    let className = 'RichEditor-styleButton';
+    let className = 'SynapseDraft-styleButton';
     if (this.props.active) {
-      className += ' RichEditor-activeButton';
+      className += ' SynapseDraft-activeButton';
     }
 
     return (

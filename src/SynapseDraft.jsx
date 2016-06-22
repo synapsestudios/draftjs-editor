@@ -75,17 +75,17 @@ class SynapseDraft extends Component {
 
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
-    let className = 'RichEditor-editor';
+    let className = 'SynapseDraft-editor';
     const contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (contentState.getBlockMap().first().getType() !== 'unstyled') {
-        className += ' RichEditor-hidePlaceholder';
+        className += ' SynapseDraft-hidePlaceholder';
       }
     }
 
     return (
       <div>
-        <div className="RichEditor-root">
+        <div className="SynapseDraft-root">
           <BlockStyleControls
             editorState={editorState}
             onToggle={this.toggleBlockType}
