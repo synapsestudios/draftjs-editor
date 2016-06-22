@@ -1,0 +1,38 @@
+// *******************************************
+// *******************************************
+
+    // Stylings for the Synapse Draft.js Demo
+
+// *******************************************
+// *******************************************
+
+@import "./reset.scss";
+@import "../scss/synapse-draft";
+
+body {
+    background  : #f4f4f4;
+    font-family : -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+}
+
+.h1 {
+    margin      : 14px 0;
+    font-size   : 32px;
+    font-weight : 800;
+}
+
+.p {
+    margin    : 8px 0;
+    font-size : 14px;
+}
+
+.text-center {
+    text-align : center;
+}
+
+.demo__wrapper {
+    max-width  : 600px;
+    margin     : 40px auto;
+    padding    : 20px;
+    background : #ffffff;
+
+}
