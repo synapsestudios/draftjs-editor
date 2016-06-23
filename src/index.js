@@ -1,3 +1,3 @@
-import SynapseDraft from './SynapseDraft';
+import DraftJSEditor from './DraftJSEditor';
 
-export default SynapseDraft;
+export default DraftJSEditor;

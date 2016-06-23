@@ -9,7 +9,7 @@ import {
 import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
 
-class SynapseDraft extends Component {
+class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
 
@@ -58,16 +58,16 @@ class SynapseDraft extends Component {
 
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
-    let className = 'SynapseDraft-editor';
+    let className = 'DraftJSEditor-editor';
     const contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (contentState.getBlockMap().first().getType() !== 'unstyled') {
-        className += ' SynapseDraft-hidePlaceholder';
+        className += ' DraftJSEditor-hidePlaceholder';
       }
     }
 
     return (
-      <div className="SynapseDraft-root">
+      <div className="DraftJSEditor-root">
         {this.props.showBlockControls ? (
           <BlockStyleControls
             editorState={editorState}
@@ -95,14 +95,14 @@ class SynapseDraft extends Component {
   }
 }
 
-SynapseDraft.propTypes = {
-  showBlockControls: React.PropTypes.boolean,
-  showInlineControls: React.PropTypes.boolean,
+DraftJSEditor.propTypes = {
+  showBlockControls: React.PropTypes.bool,
+  showInlineControls: React.PropTypes.bool,
 };
 
-SynapseDraft.defaultProps = {
+DraftJSEditor.defaultProps = {
   showBlockControls: true,
   showInlineControls: true,
 };
 
-export default SynapseDraft;
+export default DraftJSEditor;
