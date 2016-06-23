@@ -12,7 +12,7 @@ function InlineStyleControls({ editorState, onToggle }) {
   const currentStyle = editorState.getCurrentInlineStyle();
 
   return (
-    <div className="SynapseDraft-controls">
+    <div className="DraftJSEditor-controls">
       {INLINE_STYLES.map(type =>
         <StyleButton
           key={type.label}

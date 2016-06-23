@@ -1,5 +1,5 @@
 import React from 'react';
-import SynapseDraft from '../src/SynapseDraft';
+import DraftJSEditor from '../src/DraftJSEditor';
 
 require('./demo.scss');
 
@@ -12,7 +12,7 @@ require('./demo.scss');
 // const contentStateFromRaw = convertFromRaw(prebuiltRaw);
 /* eslint-enable */
 
-function SynapseDraftDemo() {
+function DraftEditorDemo() {
   return (
     <div className="demo__wrapper">
       <h1 className="h1 text-center">Draft.js Editor</h1>
@@ -20,9 +20,9 @@ function SynapseDraftDemo() {
         A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios.
       </p>
       <p className="p text-center">
-        View this project on <a href="https://github.com/synapsestudios/synapse-draft">Github</a>
+        View this project on <a href="https://github.com/synapsestudios/draftjs-editor">Github</a>
       </p>
-      <SynapseDraft />
+      <DraftJSEditor />
       {/*
         TODO
         <div>
@@ -49,4 +49,4 @@ function SynapseDraftDemo() {
   );
 }
 
-export default SynapseDraftDemo;
+export default DraftEditorDemo;

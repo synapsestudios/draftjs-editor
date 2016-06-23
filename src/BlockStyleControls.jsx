@@ -22,7 +22,7 @@ function BlockStyleControls({ editorState, onToggle }) {
     .getType();
 
   return (
-    <div className="SynapseDraft-controls">
+    <div className="DraftJSEditor-controls">
       {BLOCK_TYPES.map((type) =>
         <StyleButton
           key={type.label}

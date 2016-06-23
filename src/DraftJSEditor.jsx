@@ -68,14 +68,18 @@ class SynapseDraft extends Component {
 
     return (
       <div className="SynapseDraft-root">
-        <BlockStyleControls
-          editorState={editorState}
-          onToggle={this.toggleBlockType}
-        />
-        <InlineStyleControls
-          editorState={editorState}
-          onToggle={this.toggleInlineStyle}
-        />
+        {this.props.showBlockControls ? (
+          <BlockStyleControls
+            editorState={editorState}
+            onToggle={this.toggleBlockType}
+          />
+        ) : null}
+        {this.props.showInlineControls ? (
+          <InlineStyleControls
+            editorState={editorState}
+            onToggle={this.toggleInlineStyle}
+          />
+        ) : null}
         <div className={className} onClick={this.focus}>
           <Editor
             editorState={editorState}
@@ -90,5 +94,15 @@ class SynapseDraft extends Component {
     );
   }
 }
+
+SynapseDraft.propTypes = {
+  showBlockControls: React.PropTypes.boolean,
+  showInlineControls: React.PropTypes.boolean,
+};
+
+SynapseDraft.defaultProps = {
+  showBlockControls: true,
+  showInlineControls: true,
+};
 
 export default SynapseDraft;
