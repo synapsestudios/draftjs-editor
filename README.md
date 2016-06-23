@@ -1,12 +1,12 @@
-Synapse Draft.js - [View Demo](http://synapsestudios.github.io/synapse-draft/)
+Synapse Draft.js - [View Demo](http://synapsestudios.github.io/draftjs-editor/)
 ----
 A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios
 
 ### Install
-`npm install --save synapse-draft`
+`npm install --save @synapsestudios/draftjs-editor`
 
 ### Usage
-`import SynapseDraft from 'synapse-draft';`
+`import SynapseDraft from '@synapsestudios/draftjs-editor';`
 
 ### Props
 ```
@@ -15,7 +15,7 @@ id : 'string'
 ```
 
 ### Styles
-Styles are not included by default. Include `scss/synapse-draft.scss` in your local app.scss file to include the base styles.
+Styles are not included by default. Include `scss/draftjs-editor.scss` in your local app.scss file to include the base styles.
 
 ### Development
 * Development - `npm run demo`

@@ -15,7 +15,7 @@ require('./demo.scss');
 function SynapseDraftDemo() {
   return (
     <div className="demo__wrapper">
-      <h1 className="h1 text-center">Synapse Draft.js</h1>
+      <h1 className="h1 text-center">Draft.js Editor</h1>
       <p className="p text-center">
         A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios.
       </p>

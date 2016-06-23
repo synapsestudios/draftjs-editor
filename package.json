@@ -1,5 +1,5 @@
 {
-  "name": "synapse-draft",
+  "name": "@synapsestudios/draftjs-editor",
   "version": "0.0.1",
   "description": "A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios",
   "author": "Synapse Studios",
@@ -18,7 +18,7 @@
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "git://github.com/synapsestudios/synapse-draft.git"
+    "url": "git://github.com/synapsestudios/draftjs-editor.git"
   },
   "scripts": {
     "demo": "rm -rf ./demo-build/* && ./node_modules/webpack/bin/webpack.js --config webpack.config.demo.js && node ./demo-server.js",
