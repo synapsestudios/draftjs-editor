@@ -1,6 +1,6 @@
 {
   "name": "@synapsestudios/draftjs-editor",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios",
   "author": "Synapse Studios",
   "main": "lib/index.js",
@@ -28,7 +28,8 @@
     "prepublish": "npm run lint && npm run build"
   },
   "dependencies": {
-    "draft-js": "^0.7.0"
+    "draft-js": "^0.7.0",
+    "draft-js-export-html": "^0.3.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^15.1.0"

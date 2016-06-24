@@ -1,16 +1,8 @@
 import React from 'react';
 import DraftJSEditor from '../src/DraftJSEditor';
+import { convertRawToHTML } from '../src';
 
 require('./demo.scss');
-
-/* eslint-disable */
-// TODO
-// const prebuiltRaw = {
-//   "entityMap":{},
-//   "blocks":[{"key":"au7ob","text":"RAW: Heading 1","type":"header-one","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"4ea5l","text":"And a blockquote","type":"blockquote","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"40cb9","text":"With a list","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"6r9r7","text":"And some items","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"6qt67","text":"Maybe another item","type":"unordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"2lu4p","text":"And a secondary heading","type":"header-two","depth":0,"inlineStyleRanges":[],"entityRanges":[]},{"key":"90cfp","text":"With a paragraph at the end to wrap it all up","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]
-// };
-// const contentStateFromRaw = convertFromRaw(prebuiltRaw);
-/* eslint-enable */
 
 class DraftEditorDemo extends React.Component {
   constructor(props) {
@@ -21,7 +13,7 @@ class DraftEditorDemo extends React.Component {
         entityMap: {},
         blocks: [
           {
-            text: 'Test',
+            text: '',
             type: 'unstyled',
             depth: 0,
             inlineStyleRanges: [],
@@ -47,28 +39,7 @@ class DraftEditorDemo extends React.Component {
           onChange={content => this.setState({ content })}
           placeholder="Tell a story..."
         />
-        {/*
-          TODO
-          <div>
-            <button
-              onClick={() => {
-                this.setState({
-                  editorState: EditorState.createWithContent(contentStateFromRaw),
-                });
-              }}
-            >
-              Load from Raw
-            </button>
-            <button
-              onClick={() => {
-                console.log(convertToRaw(contentState));
-                console.log(JSON.stringify(convertToRaw(contentState)));
-              }}
-            >
-              Convert To Raw
-            </button>
-          </div>
-        */}
+        <div dangerouslySetInnerHTML={{ __html: convertRawToHTML(this.state.content) }} />
       </div>
     );
   }
