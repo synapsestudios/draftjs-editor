@@ -12,64 +12,66 @@ require('./demo.scss');
 // const contentStateFromRaw = convertFromRaw(prebuiltRaw);
 /* eslint-enable */
 
-function DraftEditorDemo() {
-  /*
-    const content = {
-      entityMap: {},
-      blocks: [
-        {
-          key: '6dplo',
-          text: 'Test',
-          type: 'unstyled',
-          depth: 0,
-          inlineStyleRanges: [],
-          entityRanges: [],
-        },
-      ],
-    };
-  */
-  const content = undefined;
+class DraftEditorDemo extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div className="demo__wrapper">
-      <h1 className="h1 text-center">Draft.js Editor</h1>
-      <p className="p text-center">
-        A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios.
-      </p>
-      <p className="p text-center">
-        View this project on <a href="https://github.com/synapsestudios/draftjs-editor">Github</a>
-      </p>
-      <DraftJSEditor
-        content={content}
-        onChange={content => {
-          console.log(JSON.stringify(content));
-        }}
-        placeholder="Tell a story..."
-      />
-      {/*
-        TODO
-        <div>
-          <button
-            onClick={() => {
-              this.setState({
-                editorState: EditorState.createWithContent(contentStateFromRaw),
-              });
-            }}
-          >
-            Load from Raw
-          </button>
-          <button
-            onClick={() => {
-              console.log(convertToRaw(contentState));
-              console.log(JSON.stringify(convertToRaw(contentState)));
-            }}
-          >
-            Convert To Raw
-          </button>
-        </div>
-      */}
-    </div>
-  );
+    this.state = {
+      content: {
+        entityMap: {},
+        blocks: [
+          {
+            text: 'Test',
+            type: 'unstyled',
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+          },
+        ],
+      },
+    };
+  }
+
+  render() {
+    return (
+      <div className="demo__wrapper">
+        <h1 className="h1 text-center">Draft.js Editor</h1>
+        <p className="p text-center">
+          A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios.
+        </p>
+        <p className="p text-center">
+          View this project on <a href="https://github.com/synapsestudios/draftjs-editor">Github</a>
+        </p>
+        <DraftJSEditor
+          content={this.state.content || null}
+          onChange={content => this.setState({ content })}
+          placeholder="Tell a story..."
+        />
+        {/*
+          TODO
+          <div>
+            <button
+              onClick={() => {
+                this.setState({
+                  editorState: EditorState.createWithContent(contentStateFromRaw),
+                });
+              }}
+            >
+              Load from Raw
+            </button>
+            <button
+              onClick={() => {
+                console.log(convertToRaw(contentState));
+                console.log(JSON.stringify(convertToRaw(contentState)));
+              }}
+            >
+              Convert To Raw
+            </button>
+          </div>
+        */}
+      </div>
+    );
+  }
 }
 
 export default DraftEditorDemo;

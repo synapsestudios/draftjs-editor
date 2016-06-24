@@ -40,7 +40,7 @@ class DraftJSEditor extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.content) {
+    if (! this.state.editorState.getCurrentContent().hasText() && newProps.content) {
       const editorState = EditorState.createWithContent(convertFromRaw(newProps.content));
       this.setState({ editorState });
     }
