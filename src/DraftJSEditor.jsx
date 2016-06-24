@@ -78,13 +78,45 @@ class DraftJSEditor extends Component {
     );
   }
 
-  render() {
-    const { editorState } = this.state;
+  renderControls() {
+    const controls = [];
 
+    if (this.props.blockControls) {
+      controls.push(
+        <BlockStyleControls
+          controls={this.props.blockControls}
+          display={this.props.controlDisplay}
+          key="block-controls"
+          editorState={this.state.editorState}
+          onToggle={this.toggleBlockType}
+        />
+      );
+    }
+
+    if (this.props.inlineControls) {
+      controls.push(
+        <InlineStyleControls
+          controls={this.props.inlineControls}
+          display={this.props.controlDisplay}
+          key="inline-controls"
+          editorState={this.state.editorState}
+          onToggle={this.toggleInlineStyle}
+        />
+      );
+    }
+
+    if (this.props.controlDisplay === 'inline') {
+      return controls.reverse();
+    }
+
+    return controls;
+  }
+
+  render() {
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
     let className = 'DraftJSEditor-editor';
-    const contentState = editorState.getCurrentContent();
+    const contentState = this.state.editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (contentState.getBlockMap().first().getType() !== 'unstyled') {
         className += ' DraftJSEditor-hidePlaceholder';
@@ -93,23 +125,10 @@ class DraftJSEditor extends Component {
 
     return (
       <div className="DraftJSEditor-root">
-        {this.props.blockControls ? (
-          <BlockStyleControls
-            controls={this.props.blockControls}
-            editorState={editorState}
-            onToggle={this.toggleBlockType}
-          />
-        ) : null}
-        {this.props.inlineControls ? (
-          <InlineStyleControls
-            controls={this.props.inlineControls}
-            editorState={editorState}
-            onToggle={this.toggleInlineStyle}
-          />
-        ) : null}
+        {this.renderControls()}
         <div className={className} onClick={this.focus}>
           <Editor
-            editorState={editorState}
+            editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
             placeholder={this.props.placeholder}
@@ -128,6 +147,7 @@ DraftJSEditor.propTypes = {
     React.PropTypes.arrayOf(React.PropTypes.string),
   ]),
   content: React.PropTypes.object,
+  controlDisplay: React.PropTypes.oneOf(['block', 'inline']),
   blockControls: React.PropTypes.oneOfType([
     React.PropTypes.bool,
     React.PropTypes.arrayOf(React.PropTypes.string),
@@ -139,6 +159,7 @@ DraftJSEditor.propTypes = {
 
 DraftJSEditor.defaultProps = {
   blockControls: BLOCK_CONTROLS,
+  controlDisplay: 'block',
   inlineControls: INLINE_CONTROLS,
   placeholder: '',
   spellCheck: true,
