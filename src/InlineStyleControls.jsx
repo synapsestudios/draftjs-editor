@@ -1,32 +1,37 @@
 import React, { PropTypes } from 'react';
 import StyleButton from './StyleButton';
 
-const INLINE_STYLES = [
-  { label: 'Bold', style: 'BOLD' },
-  { label: 'Italic', style: 'ITALIC' },
-  { label: 'Underline', style: 'UNDERLINE' },
-  { label: 'Monospace', style: 'CODE' },
-];
+import { INLINE_CONTROLS, INLINE_STYLES, validator } from './controls';
 
-function InlineStyleControls({ editorState, onToggle }) {
+function InlineStyleControls({ controls, editorState, onToggle }) {
   const currentStyle = editorState.getCurrentInlineStyle();
 
   return (
     <div className="DraftJSEditor-controls">
-      {INLINE_STYLES.map(type =>
-        <StyleButton
-          key={type.label}
-          active={currentStyle.has(type.style)}
-          label={type.label}
-          onToggle={onToggle}
-          style={type.style}
-        />
+      {INLINE_STYLES.map(
+        type => {
+          if (controls.indexOf(type.label) !== -1) {
+            return (
+              <StyleButton
+                key={type.label}
+                active={currentStyle.has(type.style)}
+                label={type.label}
+                onToggle={onToggle}
+                style={type.style}
+              />
+            );
+          }
+        }
       )}
     </div>
   );
 }
 
 InlineStyleControls.propTypes = {
+  controls: React.PropTypes.oneOfType([
+    React.PropTypes.bool,
+    React.PropTypes.arrayOf(validator(INLINE_CONTROLS)),
+  ]),
   editorState: PropTypes.object,
   onToggle: PropTypes.func,
 };

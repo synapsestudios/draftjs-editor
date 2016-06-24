@@ -13,6 +13,23 @@ require('./demo.scss');
 /* eslint-enable */
 
 function DraftEditorDemo() {
+  /*
+    const content = {
+      entityMap: {},
+      blocks: [
+        {
+          key: '6dplo',
+          text: 'Test',
+          type: 'unstyled',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+        },
+      ],
+    };
+  */
+  const content = undefined;
+
   return (
     <div className="demo__wrapper">
       <h1 className="h1 text-center">Draft.js Editor</h1>
@@ -22,7 +39,13 @@ function DraftEditorDemo() {
       <p className="p text-center">
         View this project on <a href="https://github.com/synapsestudios/draftjs-editor">Github</a>
       </p>
-      <DraftJSEditor />
+      <DraftJSEditor
+        content={content}
+        onChange={content => {
+          console.log(JSON.stringify(content));
+        }}
+        placeholder="Tell a story..."
+      />
       {/*
         TODO
         <div>

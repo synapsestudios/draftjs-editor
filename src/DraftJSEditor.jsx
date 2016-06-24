@@ -1,6 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import {
+  convertFromRaw,
+  convertToRaw,
+  ContentState,
   Editor,
   EditorState,
   RichUtils,
@@ -9,16 +12,27 @@ import {
 import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
 
+import { BLOCK_CONTROLS, INLINE_CONTROLS } from './controls';
+
 class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      editorState: EditorState.createEmpty(),
-    };
+    let editorState = EditorState.createEmpty();
+
+    if (props.content) {
+      editorState = EditorState.createWithContent(convertFromRaw(props.content));
+    }
+
+    this.state = { editorState };
 
     this.focus = () => this.refs.editor.focus();
-    this.onChange = (editorState) => this.setState({ editorState });
+    this.onChange = (editorState) => {
+      this.setState({ editorState });
+      if (props.onChange) {
+        props.onChange(convertToRaw(editorState.getCurrentContent()));
+      }
+    };
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
@@ -68,14 +82,16 @@ class DraftJSEditor extends Component {
 
     return (
       <div className="DraftJSEditor-root">
-        {this.props.showBlockControls ? (
+        {this.props.blockControls ? (
           <BlockStyleControls
+            controls={this.props.blockControls}
             editorState={editorState}
             onToggle={this.toggleBlockType}
           />
         ) : null}
-        {this.props.showInlineControls ? (
+        {this.props.inlineControls ? (
           <InlineStyleControls
+            controls={this.props.inlineControls}
             editorState={editorState}
             onToggle={this.toggleInlineStyle}
           />
@@ -85,9 +101,9 @@ class DraftJSEditor extends Component {
             editorState={editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
-            placeholder="Tell a story..."
+            placeholder={this.props.placeholder}
             ref="editor"
-            spellCheck
+            spellCheck={this.props.spellCheck}
           />
         </div>
       </div>
@@ -96,13 +112,25 @@ class DraftJSEditor extends Component {
 }
 
 DraftJSEditor.propTypes = {
-  showBlockControls: React.PropTypes.bool,
-  showInlineControls: React.PropTypes.bool,
+  blockControls: React.PropTypes.oneOfType([
+    React.PropTypes.bool,
+    React.PropTypes.arrayOf(React.PropTypes.string),
+  ]),
+  content: React.PropTypes.object,
+  blockControls: React.PropTypes.oneOfType([
+    React.PropTypes.bool,
+    React.PropTypes.arrayOf(React.PropTypes.string),
+  ]),
+  onChange: React.PropTypes.func,
+  placeholder: React.PropTypes.string,
+  spellCheck: React.PropTypes.bool,
 };
 
 DraftJSEditor.defaultProps = {
-  showBlockControls: true,
-  showInlineControls: true,
+  blockControls: BLOCK_CONTROLS,
+  inlineControls: INLINE_CONTROLS,
+  placeholder: '',
+  spellCheck: true,
 };
 
 export default DraftJSEditor;
