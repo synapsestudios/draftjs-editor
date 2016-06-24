@@ -39,6 +39,14 @@ class DraftJSEditor extends Component {
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
   }
 
+  componentWillReceiveProps(newProps) {
+    if (newProps.content) {
+      editorState = EditorState.createWithContent(convertFromRaw(newProps.content));
+    }
+
+    this.setState({ editorState });
+  }
+
   _handleKeyCommand(command) {
     const { editorState } = this.state;
     const newState = RichUtils.handleKeyCommand(editorState, command);
