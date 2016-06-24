@@ -30,7 +30,12 @@ class DraftJSEditor extends Component {
     this.onChange = (editorState) => {
       this.setState({ editorState });
       if (props.onChange) {
-        props.onChange(convertToRaw(editorState.getCurrentContent()));
+        const contentState = editorState.getCurrentContent();
+        if (contentState.hasText()) {
+          props.onChange(convertToRaw(contentState));
+        } else {
+          props.onChange(null);
+        }
       }
     };
 
