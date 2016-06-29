@@ -28,15 +28,17 @@ class DraftJSEditor extends Component {
 
     this.focus = () => this.refs.editor.focus();
     this.onChange = (editorState) => {
-      this.setState({ editorState });
-      if (props.onChange) {
-        const contentState = editorState.getCurrentContent();
-        if (contentState.hasText()) {
-          props.onChange(convertToRaw(contentState));
-        } else {
-          props.onChange(null);
+      this.setState({ editorState }, () => {
+        if (props.onChange) {
+          const contentState = editorState.getCurrentContent();
+
+          if (contentState.hasText()) {
+            props.onChange(convertToRaw(contentState));
+          } else {
+            props.onChange(null);
+          }
         }
-      }
+      });
     };
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
@@ -45,10 +47,12 @@ class DraftJSEditor extends Component {
   }
 
   componentWillReceiveProps(newProps) {
+    const contentState = this.state.editorState.getCurrentContent();
+
     if (
       newProps.content &&
       ! this.props.content &&
-      ! this.state.editorState.getCurrentContent().hasText()
+      ! contentState.hasText()
     ) {
       const editorState = EditorState.createWithContent(convertFromRaw(newProps.content));
       this.setState({ editorState });

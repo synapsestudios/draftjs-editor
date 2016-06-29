@@ -39,7 +39,9 @@ class DraftEditorDemo extends React.Component {
           onChange={content => this.setState({ content })}
           placeholder="Tell a story..."
         />
-        <div dangerouslySetInnerHTML={{ __html: convertRawToHTML(this.state.content) }} />
+        {this.state.content ? (
+          <div dangerouslySetInnerHTML={{ __html: convertRawToHTML(this.state.content) }} />
+        ) : null}
       </div>
     );
   }
