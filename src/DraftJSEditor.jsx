@@ -141,8 +141,10 @@ class DraftJSEditor extends Component {
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
             placeholder={this.props.placeholder}
+            readOnly={this.props.readOnly}
             ref="editor"
             spellCheck={this.props.spellCheck}
+            stripPastedStyles={this.props.stripPastedStyles}
           />
         </div>
       </div>
@@ -163,7 +165,9 @@ DraftJSEditor.propTypes = {
   ]),
   onChange: React.PropTypes.func,
   placeholder: React.PropTypes.string,
+  readOnly: React.PropTypes.bool,
   spellCheck: React.PropTypes.bool,
+  stripPastedStyles: React.PropTypes.bool,
 };
 
 DraftJSEditor.defaultProps = {
@@ -171,7 +175,9 @@ DraftJSEditor.defaultProps = {
   controlDisplay: 'block',
   inlineControls: INLINE_CONTROLS,
   placeholder: '',
+  readOnly: false,
   spellCheck: true,
+  stripPastedStyles: false,
 };
 
 export default DraftJSEditor;
