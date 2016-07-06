@@ -159,10 +159,6 @@ DraftJSEditor.propTypes = {
   ]),
   content: React.PropTypes.object,
   controlDisplay: React.PropTypes.oneOf(['block', 'inline']),
-  blockControls: React.PropTypes.oneOfType([
-    React.PropTypes.bool,
-    React.PropTypes.arrayOf(React.PropTypes.string),
-  ]),
   onChange: React.PropTypes.func,
   placeholder: React.PropTypes.string,
   readOnly: React.PropTypes.bool,
