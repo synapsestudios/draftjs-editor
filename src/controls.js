@@ -18,6 +18,8 @@ export const INLINE_STYLES = [
   { label: 'Italic', style: 'ITALIC' },
   { label: 'Underline', style: 'UNDERLINE' },
   { label: 'Monospace', style: 'CODE' },
+  { label: 'Link', style: 'LINK' },
+  { label: 'Remove Link', style: 'REMOVE-LINK' }
 ];
 
 export const BLOCK_CONTROLS = BLOCK_TYPES.map(type => type.label);

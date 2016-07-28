@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 import {
   convertFromRaw,
   convertToRaw,
+  CompositeDecorator,
   ContentState,
   Editor,
   EditorState,
+  Entity,
   RichUtils,
 } from 'draft-js';
 
@@ -14,17 +16,50 @@ import InlineStyleControls from './InlineStyleControls';
 
 import { BLOCK_CONTROLS, INLINE_CONTROLS } from './controls';
 
+function findLinkEntities(contentBlock, callback) {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return (
+        entityKey !== null &&
+        Entity.get(entityKey).getType() === 'LINK'
+      );
+    },
+    callback
+  );
+}
+
+const Link = (props) => {
+  const {url} = Entity.get(props.entityKey).getData();
+  return (
+    <a href={url}>
+      {props.children}
+    </a>
+  );
+};
+
 class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
 
-    let editorState = EditorState.createEmpty();
+    const decorator = new CompositeDecorator([
+      {
+        strategy: findLinkEntities,
+        component: Link,
+      },
+    ]);
+
+    let editorState = EditorState.createEmpty(decorator);
 
     if (props.content) {
-      editorState = EditorState.createWithContent(convertFromRaw(props.content));
+      editorState = EditorState.createWithContent(convertFromRaw(props.content), decorator);
     }
 
-    this.state = { editorState };
+    this.state = {
+      editorState,
+      showUrlInput: false,
+      urlValue: '',
+    };
 
     this.focus = () => this.refs.editor.focus();
     this.onChange = (editorState) => {
@@ -44,6 +79,12 @@ class DraftJSEditor extends Component {
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
+
+    this.promptForLink = this._promptForLink.bind(this);
+    this.onUrlChange = (e) => this.setState({urlValue: e.target.value});
+    this.confirmLink = this._confirmLink.bind(this);
+    this.onLinkInputKeyDown = this._onLinkInputKeyDown.bind(this);
+    this.removeLink = this._removeLink.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -79,12 +120,68 @@ class DraftJSEditor extends Component {
   }
 
   _toggleInlineStyle(inlineStyle) {
+    if (inlineStyle === 'LINK') {
+      this.promptForLink();
+    } else if (inlineStyle === 'REMOVE-LINK') {
+      this.removeLink();
+    } else {
+      this.onChange(
+        RichUtils.toggleInlineStyle(
+          this.state.editorState,
+          inlineStyle
+        )
+      );
+    }
+  }
+
+  // Link handling
+  _confirmLink() {
+    const { editorState, urlValue } = this.state;
+    const entityKey = Entity.create('LINK', 'MUTABLE', {url: urlValue});
+
     this.onChange(
-      RichUtils.toggleInlineStyle(
-        this.state.editorState,
-        inlineStyle
+      RichUtils.toggleLink(
+        editorState,
+        editorState.getSelection(),
+        entityKey
       )
     );
+
+    this.setState({
+      showUrlInput: false,
+      urlValue: '',
+    }, () => {
+      setTimeout(() => this.focus(), 0);
+    });
+  }
+
+  _onLinkInputKeyDown(e) {
+    if (e.which === 13) {
+      this._confirmLink(e);
+    }
+  }
+
+  _promptForLink() {
+    const { editorState } = this.state;
+    const selection = editorState.getSelection();
+    if (! selection.isCollapsed()) {
+      this.setState({
+        showUrlInput: true,
+        urlValue: '',
+      }, () => {
+        setTimeout(() => this.refs.url.focus(), 0);
+      });
+    }
+  }
+
+  _removeLink() {
+    const {editorState} = this.state;
+    const selection = editorState.getSelection();
+    if (! selection.isCollapsed()) {
+      this.setState({
+        editorState: RichUtils.toggleLink(editorState, selection, null),
+      });
+    }
   }
 
   renderControls() {
@@ -132,9 +229,32 @@ class DraftJSEditor extends Component {
       }
     }
 
+    let urlInput;
+    if (this.state.showUrlInput) {
+      urlInput = (
+        <div className="DraftJSEditor-urlInput">
+          <input
+            className="DraftJSEditor-urlInputText"
+            onChange={this.onUrlChange}
+            ref="url"
+            type="text"
+            value={this.state.urlValue}
+            onKeyDown={this.onLinkInputKeyDown}
+          />
+          <button
+            className="DraftJSEditor-urlInputButton"
+            onMouseDown={this.confirmLink}
+          >
+            Confirm
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div className="DraftJSEditor-root">
         {this.renderControls()}
+        {urlInput}
         <div className={className} onClick={this.focus}>
           <Editor
             editorState={this.state.editorState}
