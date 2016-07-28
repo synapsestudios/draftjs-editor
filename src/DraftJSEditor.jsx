@@ -76,14 +76,15 @@ class DraftJSEditor extends Component {
       });
     };
 
-    this.handleKeyCommand = (command) => this._handleKeyCommand(command);
-    this.toggleBlockType = (type) => this._toggleBlockType(type);
-    this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
+    this.handleKeyCommand = command => this._handleKeyCommand(command);
+    this.toggleBlockType = type => this._toggleBlockType(type);
+    this.toggleInlineStyle = style => this._toggleInlineStyle(style);
 
-    this.promptForLink = this._promptForLink.bind(this);
-    this.onUrlChange = (e) => this.setState({urlValue: e.target.value});
+    this.closeLinkPrompt = this._closeLinkPrompt.bind(this);
     this.confirmLink = this._confirmLink.bind(this);
     this.onLinkInputKeyDown = this._onLinkInputKeyDown.bind(this);
+    this.onUrlChange = e => this.setState({urlValue: e.target.value});
+    this.promptForLink = this._promptForLink.bind(this);
     this.removeLink = this._removeLink.bind(this);
   }
 
@@ -121,9 +122,11 @@ class DraftJSEditor extends Component {
 
   _toggleInlineStyle(inlineStyle) {
     if (inlineStyle === 'LINK') {
-      this.promptForLink();
-    } else if (inlineStyle === 'REMOVE-LINK') {
-      this.removeLink();
+      if (! this.state.showUrlInput) {
+        this.promptForLink();
+      } else {
+        this.removeLink();
+      }
     } else {
       this.onChange(
         RichUtils.toggleInlineStyle(
@@ -135,6 +138,17 @@ class DraftJSEditor extends Component {
   }
 
   // Link handling
+  _closeLinkPrompt() {
+    this.setState({
+      showUrlInput: false,
+      urlValue: '',
+    }, () => {
+      setTimeout(() => {
+        this.focus();
+      }, 0);
+    });
+  }
+
   _confirmLink() {
     const { editorState, urlValue } = this.state;
     const entityKey = Entity.create('LINK', 'MUTABLE', {url: urlValue});
@@ -147,12 +161,7 @@ class DraftJSEditor extends Component {
       )
     );
 
-    this.setState({
-      showUrlInput: false,
-      urlValue: '',
-    }, () => {
-      setTimeout(() => this.focus(), 0);
-    });
+    this.closeLinkPrompt();
   }
 
   _onLinkInputKeyDown(e) {
@@ -164,24 +173,26 @@ class DraftJSEditor extends Component {
   _promptForLink() {
     const { editorState } = this.state;
     const selection = editorState.getSelection();
+
     if (! selection.isCollapsed()) {
-      this.setState({
-        showUrlInput: true,
-        urlValue: '',
-      }, () => {
-        setTimeout(() => this.refs.url.focus(), 0);
-      });
+      if (RichUtils.currentBlockContainsLink(editorState)) {
+        this.removeLink();
+      } else {
+        this.setState({
+          showUrlInput: true,
+          urlValue: '',
+        }, () => {
+          setTimeout(() => this.refs.url.focus(), 0);
+        });
+      }
     }
   }
 
   _removeLink() {
     const {editorState} = this.state;
     const selection = editorState.getSelection();
-    if (! selection.isCollapsed()) {
-      this.setState({
-        editorState: RichUtils.toggleLink(editorState, selection, null),
-      });
-    }
+
+    this.onChange(RichUtils.toggleLink(editorState, selection, null));
   }
 
   renderControls() {
