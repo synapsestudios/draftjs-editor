@@ -52,13 +52,12 @@ class DraftJSEditor extends Component {
     this.toggleInlineStyle = style => this._toggleInlineStyle(style);
     this.toggleCustomBlockInput = nextState => this._toggleCustomBlockInput(nextState);
 
-    this.confirmUrl = this._confirmUrl.bind(this);
-    this.onUrlInputKeyDown = this._onUrlInputKeyDown.bind(this);
+    this.closeLinkPrompt = this._closeLinkPrompt.bind(this);
+    this.confirmLink = this._confirmLink.bind(this);
+    this.onLinkInputKeyDown = this._onLinkInputKeyDown.bind(this);
     this.onUrlChange = e => this.setState({ urlValue: e.target.value });
     this.promptForLink = this._promptForLink.bind(this);
     this.removeLink = this._removeLink.bind(this);
-    this.showUrlInput = this._showUrlInput.bind(this);
-    this.hideUrlInput = this._hideUrlInput.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -124,9 +123,20 @@ class DraftJSEditor extends Component {
     }
   }
 
-  _confirmUrl() {
-    const { editorState, urlValue } = this.state;
+  // Link handling
+  _closeLinkPrompt() {
+    this.setState({
+      showUrlInput: false,
+      urlValue: '',
+    }, () => {
+      setTimeout(() => {
+        this.focus();
+      }, 0);
+    });
+  }
 
+  _confirmLink() {
+    const { editorState, urlValue } = this.state;
     const entityKey = Entity.create('LINK', 'MUTABLE', { url: urlValue });
 
     this.onChange(
@@ -137,12 +147,12 @@ class DraftJSEditor extends Component {
       )
     );
 
-    this.hideUrlInput();
+    this.closeLinkPrompt();
   }
 
-  _onUrlInputKeyDown(e) {
+  _onLinkInputKeyDown(e) {
     if (e.which === 13) {
-      this._confirmUrl(e);
+      this._confirmLink(e);
     }
   }
 
@@ -154,7 +164,12 @@ class DraftJSEditor extends Component {
       if (RichUtils.currentBlockContainsLink(editorState)) {
         this.removeLink();
       } else {
-        this.showUrlInput();
+        this.setState({
+          showUrlInput: true,
+          urlValue: '',
+        }, () => {
+          setTimeout(() => this.refs.url.focus(), 0);
+        });
       }
     }
   }
@@ -164,27 +179,6 @@ class DraftJSEditor extends Component {
     const selection = editorState.getSelection();
 
     this.onChange(RichUtils.toggleLink(editorState, selection, null));
-  }
-
-  _showUrlInput() {
-    this.setState({
-      showUrlInput: true,
-      urlValue: '',
-    }, () => {
-      setTimeout(() => this.refs.url.focus(), 0);
-    });
-  }
-
-  _hideUrlInput(editorState) {
-    this.setState({
-      showUrlInput: false,
-      urlValue: '',
-      editorState: editorState || this.state.editorState,
-    }, () => {
-      setTimeout(() => {
-        this.focus();
-      }, 0);
-    });
   }
 
   _insertCustomBlock(editorState, type, data) {
@@ -283,11 +277,11 @@ class DraftJSEditor extends Component {
             ref="url"
             type="text"
             value={this.state.urlValue}
-            onKeyDown={this.onUrlInputKeyDown}
+            onKeyDown={this.onLinkInputKeyDown}
           />
           <button
             className="DraftJSEditor-urlInputButton"
-            onMouseDown={this.confirmUrl}
+            onMouseDown={this.confirmLink}
           >
             Confirm
           </button>
