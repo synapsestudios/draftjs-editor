@@ -6,8 +6,8 @@ export default {
     return {
       component: props => {
         const entity = Entity.get(props.block.getEntityAt(0));
-        const { src } = entity.getData();
-        return <iframe src={src} allowFullScreen></iframe>;
+        const { src, alt } = entity.getData();
+        return <img src={src} alt={alt} />;
       },
       editable: false,
     };
@@ -15,18 +15,27 @@ export default {
   getInitialData() {
     return {
       src: '',
+      alt: '',
     };
   },
   getLabel() {
-    return 'IFrame';
+    return 'Image';
   },
   renderHTML(data) {
-    return `<iframe src="${data.src}" allowFullScreen></iframe>`;
+    return `<img src="${data.src}" alt="${data.alt}" />`;
   },
   renderInputForm(data, onDataChange, onKeyDown, onSubmit) {
     const updateSrc = (e) => {
       onDataChange({
         src: e.target.value,
+        alt: data.alt,
+      });
+    };
+
+    const updateAlt = (e) => {
+      onDataChange({
+        src: data.src,
+        alt: e.target.value,
       });
     };
 
@@ -37,6 +46,14 @@ export default {
           type="text"
           value={data.src}
           onKeyDown={onKeyDown}
+          placeholder="URL"
+        />
+        <input
+          onChange={updateAlt}
+          type="text"
+          value={data.alt}
+          onKeyDown={onKeyDown}
+          placeholder="Alt text"
         />
         <button onMouseDown={onSubmit}>
           Confirm

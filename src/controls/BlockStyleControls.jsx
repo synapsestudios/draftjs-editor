@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import StyleButton from './StyleButton';
 
-import { BLOCK_CONTROLS, BLOCK_TYPES, validator } from './controls';
+import { BLOCK_CONTROLS, BLOCK_TYPES, validator } from '../controls';
 
 function BlockStyleControls({ controls, display, editorState, onToggle }) {
   const selection = editorState.getSelection();

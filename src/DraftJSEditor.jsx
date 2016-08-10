@@ -5,7 +5,6 @@ import {
   convertFromRaw,
   convertToRaw,
   CompositeDecorator,
-  ContentState,
   Editor,
   EditorState,
   Entity,
@@ -14,8 +13,9 @@ import {
 
 import linkDecorator from './decorators/link';
 
-import BlockStyleControls from './BlockStyleControls';
-import InlineStyleControls from './InlineStyleControls';
+import BlockStyleControls from './controls/BlockStyleControls';
+import InlineStyleControls from './controls/InlineStyleControls';
+import CustomBlockControls from './controls/CustomBlockControls';
 
 import { BLOCK_CONTROLS, INLINE_CONTROLS } from './controls';
 
@@ -39,7 +39,9 @@ class DraftJSEditor extends Component {
       editorState,
       showUrlInput: false,
       urlValue: '',
-      urlType: null,
+      showCustomBlockInput: false,
+      customBlockType: null,
+      customBlockData: {},
     };
 
     this.focus = () => this.refs.editor.focus();
@@ -48,10 +50,11 @@ class DraftJSEditor extends Component {
     this.handleKeyCommand = command => this._handleKeyCommand(command);
     this.toggleBlockType = type => this._toggleBlockType(type);
     this.toggleInlineStyle = style => this._toggleInlineStyle(style);
+    this.toggleCustomBlockInput = nextState => this._toggleCustomBlockInput(nextState);
 
     this.confirmUrl = this._confirmUrl.bind(this);
     this.onUrlInputKeyDown = this._onUrlInputKeyDown.bind(this);
-    this.onUrlChange = e => this.setState({urlValue: e.target.value});
+    this.onUrlChange = e => this.setState({ urlValue: e.target.value });
     this.promptForLink = this._promptForLink.bind(this);
     this.removeLink = this._removeLink.bind(this);
     this.showUrlInput = this._showUrlInput.bind(this);
@@ -122,23 +125,19 @@ class DraftJSEditor extends Component {
   }
 
   _confirmUrl() {
-    const { editorState, urlValue, urlType } = this.state;
+    const { editorState, urlValue } = this.state;
 
-    if (urlType === 'LINK') {
-      const entityKey = Entity.create('LINK', 'MUTABLE', { url: urlValue });
+    const entityKey = Entity.create('LINK', 'MUTABLE', { url: urlValue });
 
-      this.onChange(
-        RichUtils.toggleLink(
-          editorState,
-          editorState.getSelection(),
-          entityKey
-        )
-      );
+    this.onChange(
+      RichUtils.toggleLink(
+        editorState,
+        editorState.getSelection(),
+        entityKey
+      )
+    );
 
-      this.hideUrlInput();
-    } else if (renderers[urlType]) {
-      this.hideUrlInput(renderers[urlType].getNextEditorState(editorState, { src: urlValue }));
-    }
+    this.hideUrlInput();
   }
 
   _onUrlInputKeyDown(e) {
@@ -155,23 +154,22 @@ class DraftJSEditor extends Component {
       if (RichUtils.currentBlockContainsLink(editorState)) {
         this.removeLink();
       } else {
-        this.showUrlInput('LINK');
+        this.showUrlInput();
       }
     }
   }
 
   _removeLink() {
-    const {editorState} = this.state;
+    const { editorState } = this.state;
     const selection = editorState.getSelection();
 
     this.onChange(RichUtils.toggleLink(editorState, selection, null));
   }
 
-  _showUrlInput(type) {
+  _showUrlInput() {
     this.setState({
       showUrlInput: true,
       urlValue: '',
-      urlType: type,
     }, () => {
       setTimeout(() => this.refs.url.focus(), 0);
     });
@@ -181,13 +179,31 @@ class DraftJSEditor extends Component {
     this.setState({
       showUrlInput: false,
       urlValue: '',
-      urlType: null,
       editorState: editorState || this.state.editorState,
     }, () => {
       setTimeout(() => {
         this.focus();
       }, 0);
     });
+  }
+
+  _insertCustomBlock(editorState, type, data) {
+    const entityKey = Entity.create(type, 'IMMUTABLE', data);
+
+    // if you use an empty string for the block content here Draft will die
+    return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+  }
+
+  _toggleCustomBlockInput(nextState) {
+    if (this.state.showCustomBlockInput && nextState.customBlockType === this.state.customBlockType) {
+      this.setState({
+        showCustomBlockInput: false,
+        customBlockType: null,
+        customBlockData: {},
+      });
+    } else {
+      this.setState(nextState);
+    }
   }
 
   renderBlock(block) {
@@ -228,13 +244,20 @@ class DraftJSEditor extends Component {
       );
     }
 
+    if (this.props.customBlockControls) {
+      controls.push(
+        <CustomBlockControls
+          controls={this.props.customBlockControls}
+          display={this.props.controlDisplay}
+          key="custom-block-controls"
+          onClick={this.toggleCustomBlockInput}
+        />
+      );
+    }
+
     if (this.props.controlDisplay === 'inline') {
       return controls.reverse();
     }
-
-    controls.push(
-      <button key="tempBtn" onClick={this.showUrlInput.bind(this, 'IFRAME')}>IFrame</button>
-    );
 
     return controls;
   }
@@ -272,10 +295,32 @@ class DraftJSEditor extends Component {
       );
     }
 
+    let blockInput;
+    if (this.state.showCustomBlockInput) {
+      blockInput = renderers[this.state.customBlockType].renderInputForm(
+        this.state.customBlockData,
+        (data) => { this.setState({ customBlockData: data }); },
+        () => {},
+        () => {
+          this.setState({
+            customBlockData: {},
+            customBlockType: null,
+            editorState: this._insertCustomBlock(
+              this.state.editorState,
+              this.state.customBlockType,
+              this.state.customBlockData
+            ),
+            showCustomBlockInput: false,
+          });
+        }
+      );
+    }
+
     return (
       <div className="DraftJSEditor-root">
         {this.renderControls()}
         {urlInput}
+        {blockInput}
         <div className={className} onClick={this.focus}>
           <Editor
             blockRendererFn={this.renderBlock}
@@ -299,8 +344,16 @@ DraftJSEditor.propTypes = {
     React.PropTypes.bool,
     React.PropTypes.arrayOf(React.PropTypes.string),
   ]),
+  customBlockControls: React.PropTypes.oneOfType([
+    React.PropTypes.bool,
+    React.PropTypes.arrayOf(React.PropTypes.string),
+  ]),
   content: React.PropTypes.object,
   controlDisplay: React.PropTypes.oneOf(['block', 'inline']),
+  inlineControls: React.PropTypes.oneOfType([
+    React.PropTypes.bool,
+    React.PropTypes.arrayOf(React.PropTypes.string),
+  ]),
   onChange: React.PropTypes.func,
   placeholder: React.PropTypes.string,
   readOnly: React.PropTypes.bool,
@@ -312,6 +365,7 @@ DraftJSEditor.defaultProps = {
   blockControls: BLOCK_CONTROLS,
   controlDisplay: 'block',
   inlineControls: INLINE_CONTROLS,
+  customBlockControls: ['IMG', 'IFRAME'],
   placeholder: '',
   readOnly: false,
   spellCheck: true,
