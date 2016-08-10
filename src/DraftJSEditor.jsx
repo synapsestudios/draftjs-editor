@@ -58,6 +58,10 @@ class DraftJSEditor extends Component {
     this.onUrlChange = e => this.setState({ urlValue: e.target.value });
     this.promptForLink = this._promptForLink.bind(this);
     this.removeLink = this._removeLink.bind(this);
+
+    this.confirmBlock = this._confirmBlock.bind(this);
+    this.onBlockInputKeyDown = this._onBlockInputKeyDown.bind(this);
+    this.onBlockDataChange = this._onBlockDataChange.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -181,6 +185,29 @@ class DraftJSEditor extends Component {
     this.onChange(RichUtils.toggleLink(editorState, selection, null));
   }
 
+  _confirmBlock() {
+    this.setState({
+      customBlockData: {},
+      customBlockType: null,
+      editorState: this._insertCustomBlock(
+        this.state.editorState,
+        this.state.customBlockType,
+        this.state.customBlockData
+      ),
+      showCustomBlockInput: false,
+    });
+  }
+
+  _onBlockInputKeyDown(e) {
+    if (e.which === 13) {
+      this._confirmBlock();
+    }
+  }
+
+  _onBlockDataChange(customBlockData) {
+    this.setState({ customBlockData });
+  }
+
   _insertCustomBlock(editorState, type, data) {
     const entityKey = Entity.create(type, 'IMMUTABLE', data);
 
@@ -293,20 +320,9 @@ class DraftJSEditor extends Component {
     if (this.state.showCustomBlockInput) {
       blockInput = renderers[this.state.customBlockType].renderInputForm(
         this.state.customBlockData,
-        (data) => { this.setState({ customBlockData: data }); },
-        () => {},
-        () => {
-          this.setState({
-            customBlockData: {},
-            customBlockType: null,
-            editorState: this._insertCustomBlock(
-              this.state.editorState,
-              this.state.customBlockType,
-              this.state.customBlockData
-            ),
-            showCustomBlockInput: false,
-          });
-        }
+        this.onBlockDataChange,
+        this.onBlockInputKeyDown,
+        this.confirmBlock
       );
     }
 
