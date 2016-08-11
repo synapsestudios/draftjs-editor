@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import StyleButton from './StyleButton';
 
-import { INLINE_CONTROLS, INLINE_STYLES, validator } from './controls';
+import { INLINE_CONTROLS, INLINE_STYLES, validator } from '../controls';
 
 function InlineStyleControls({ controls, display, editorState, onToggle }) {
   const currentStyle = editorState.getCurrentInlineStyle();

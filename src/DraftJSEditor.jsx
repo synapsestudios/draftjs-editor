@@ -1,52 +1,32 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import {
+  AtomicBlockUtils,
   convertFromRaw,
   convertToRaw,
   CompositeDecorator,
-  ContentState,
   Editor,
   EditorState,
   Entity,
   RichUtils,
 } from 'draft-js';
 
-import BlockStyleControls from './BlockStyleControls';
-import InlineStyleControls from './InlineStyleControls';
+import linkDecorator from './decorators/link';
+
+import BlockStyleControls from './controls/BlockStyleControls';
+import InlineStyleControls from './controls/InlineStyleControls';
+import CustomBlockControls from './controls/CustomBlockControls';
 
 import { BLOCK_CONTROLS, INLINE_CONTROLS } from './controls';
 
-function findLinkEntities(contentBlock, callback) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        Entity.get(entityKey).getType() === 'LINK'
-      );
-    },
-    callback
-  );
-}
-
-const Link = (props) => {
-  const {url} = Entity.get(props.entityKey).getData();
-  return (
-    <a href={url}>
-      {props.children}
-    </a>
-  );
-};
+import renderers from './renderers';
 
 class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
 
     const decorator = new CompositeDecorator([
-      {
-        strategy: findLinkEntities,
-        component: Link,
-      },
+      linkDecorator,
     ]);
 
     let editorState = EditorState.createEmpty(decorator);
@@ -59,33 +39,29 @@ class DraftJSEditor extends Component {
       editorState,
       showUrlInput: false,
       urlValue: '',
+      showCustomBlockInput: false,
+      customBlockType: null,
+      customBlockData: {},
     };
 
     this.focus = () => this.refs.editor.focus();
-    this.onChange = (editorState) => {
-      this.setState({ editorState }, () => {
-        if (props.onChange) {
-          const contentState = editorState.getCurrentContent();
 
-          if (contentState.hasText()) {
-            props.onChange(convertToRaw(contentState));
-          } else {
-            props.onChange(null);
-          }
-        }
-      });
-    };
-
+    this.onChange = this._onChange.bind(this);
     this.handleKeyCommand = command => this._handleKeyCommand(command);
     this.toggleBlockType = type => this._toggleBlockType(type);
     this.toggleInlineStyle = style => this._toggleInlineStyle(style);
+    this.toggleCustomBlockInput = nextState => this._toggleCustomBlockInput(nextState);
 
     this.closeLinkPrompt = this._closeLinkPrompt.bind(this);
     this.confirmLink = this._confirmLink.bind(this);
     this.onLinkInputKeyDown = this._onLinkInputKeyDown.bind(this);
-    this.onUrlChange = e => this.setState({urlValue: e.target.value});
+    this.onUrlChange = e => this.setState({ urlValue: e.target.value });
     this.promptForLink = this._promptForLink.bind(this);
     this.removeLink = this._removeLink.bind(this);
+
+    this.confirmBlock = this._confirmBlock.bind(this);
+    this.onBlockInputKeyDown = this._onBlockInputKeyDown.bind(this);
+    this.onBlockDataChange = this._onBlockDataChange.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -99,6 +75,20 @@ class DraftJSEditor extends Component {
       const editorState = EditorState.createWithContent(convertFromRaw(newProps.content));
       this.setState({ editorState });
     }
+  }
+
+  _onChange(editorState) {
+    this.setState({ editorState }, () => {
+      if (this.props.onChange) {
+        const contentState = editorState.getCurrentContent();
+
+        if (contentState.hasText()) {
+          this.props.onChange(convertToRaw(contentState));
+        } else {
+          this.props.onChange(null);
+        }
+      }
+    });
   }
 
   _handleKeyCommand(command) {
@@ -151,7 +141,7 @@ class DraftJSEditor extends Component {
 
   _confirmLink() {
     const { editorState, urlValue } = this.state;
-    const entityKey = Entity.create('LINK', 'MUTABLE', {url: urlValue});
+    const entityKey = Entity.create('LINK', 'MUTABLE', { url: urlValue });
 
     this.onChange(
       RichUtils.toggleLink(
@@ -189,10 +179,63 @@ class DraftJSEditor extends Component {
   }
 
   _removeLink() {
-    const {editorState} = this.state;
+    const { editorState } = this.state;
     const selection = editorState.getSelection();
 
     this.onChange(RichUtils.toggleLink(editorState, selection, null));
+  }
+
+  _confirmBlock() {
+    this.setState({
+      customBlockData: {},
+      customBlockType: null,
+      editorState: this._insertCustomBlock(
+        this.state.editorState,
+        this.state.customBlockType,
+        this.state.customBlockData
+      ),
+      showCustomBlockInput: false,
+    });
+  }
+
+  _onBlockInputKeyDown(e) {
+    if (e.which === 13) {
+      this._confirmBlock();
+    }
+  }
+
+  _onBlockDataChange(customBlockData) {
+    this.setState({ customBlockData });
+  }
+
+  _insertCustomBlock(editorState, type, data) {
+    const entityKey = Entity.create(type, 'IMMUTABLE', data);
+
+    // if you use an empty string for the block content here Draft will die
+    return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+  }
+
+  _toggleCustomBlockInput(nextState) {
+    if (this.state.showCustomBlockInput && nextState.customBlockType === this.state.customBlockType) {
+      this.setState({
+        showCustomBlockInput: false,
+        customBlockType: null,
+        customBlockData: {},
+      });
+    } else {
+      this.setState(nextState);
+    }
+  }
+
+  renderBlock(block) {
+    if (block.getType() === 'atomic') {
+      const entityType = Entity.get(block.getEntityAt(0)).getType();
+
+      return renderers[entityType] ? renderers[entityType].getBlockRenderer() : null;
+    }
+
+    // fall back to default renderer
+    return null;
   }
 
   renderControls() {
@@ -218,6 +261,17 @@ class DraftJSEditor extends Component {
           key="inline-controls"
           editorState={this.state.editorState}
           onToggle={this.toggleInlineStyle}
+        />
+      );
+    }
+
+    if (this.props.customBlockControls) {
+      controls.push(
+        <CustomBlockControls
+          controls={this.props.customBlockControls}
+          display={this.props.controlDisplay}
+          key="custom-block-controls"
+          onClick={this.toggleCustomBlockInput}
         />
       );
     }
@@ -262,12 +316,24 @@ class DraftJSEditor extends Component {
       );
     }
 
+    let blockInput;
+    if (this.state.showCustomBlockInput) {
+      blockInput = renderers[this.state.customBlockType].renderInputForm(
+        this.state.customBlockData,
+        this.onBlockDataChange,
+        this.onBlockInputKeyDown,
+        this.confirmBlock
+      );
+    }
+
     return (
       <div className="DraftJSEditor-root">
         {this.renderControls()}
         {urlInput}
+        {blockInput}
         <div className={className} onClick={this.focus}>
           <Editor
+            blockRendererFn={this.renderBlock}
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
@@ -288,8 +354,16 @@ DraftJSEditor.propTypes = {
     React.PropTypes.bool,
     React.PropTypes.arrayOf(React.PropTypes.string),
   ]),
+  customBlockControls: React.PropTypes.oneOfType([
+    React.PropTypes.bool,
+    React.PropTypes.arrayOf(React.PropTypes.string),
+  ]),
   content: React.PropTypes.object,
   controlDisplay: React.PropTypes.oneOf(['block', 'inline']),
+  inlineControls: React.PropTypes.oneOfType([
+    React.PropTypes.bool,
+    React.PropTypes.arrayOf(React.PropTypes.string),
+  ]),
   onChange: React.PropTypes.func,
   placeholder: React.PropTypes.string,
   readOnly: React.PropTypes.bool,
@@ -301,6 +375,7 @@ DraftJSEditor.defaultProps = {
   blockControls: BLOCK_CONTROLS,
   controlDisplay: 'block',
   inlineControls: INLINE_CONTROLS,
+  customBlockControls: ['IMG', 'IFRAME'],
   placeholder: '',
   readOnly: false,
   spellCheck: true,

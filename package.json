@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "draft-js": "^0.7.0",
-    "draft-js-export-html": "^0.3.0"
+    "draft-js-export-html": "^0.4.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^15.1.0"
