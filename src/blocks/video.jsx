@@ -38,7 +38,7 @@ export default {
     return `<iframe src="${data.src}" allowFullScreen></iframe>`;
   },
   renderInputForm(data, onDataChange, onKeyDown, onSubmit) {
-    const updateSrc = (e) => {
+    const updateSrc = e => {
       onDataChange({
         src: e.target.value,
       });
@@ -59,7 +59,7 @@ export default {
       return transformed;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
       onSubmit(e, {
         src: transformSource(data.src),
       });
