@@ -267,7 +267,7 @@ class DraftJSEditor extends Component {
     if (this.props.customBlockControls) {
       controls.push(
         <CustomBlockControls
-          renderers={this.props.customBlocks}
+          customBlocks={this.props.customBlocks}
           controls={this.props.customBlockControls}
           display={this.props.controlDisplay}
           key="custom-block-controls"
