@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react';
 
 import StyleButton from './StyleButton';
-import renderers from '../renderers';
 
-function CustomBlockControls({ controls, display, onClick }) {
+function CustomBlockControls({ controls, display, onClick, renderers }) {
   let buttons = [];
 
   const getClickHandlerForType = type => () => {
@@ -42,6 +41,7 @@ CustomBlockControls.propTypes = {
   ]),
   display: React.PropTypes.oneOf(['block', 'inline']),
   onClick: PropTypes.func,
+  renderers: PropTypes.object,
 };
 
 export default CustomBlockControls;

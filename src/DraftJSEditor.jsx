@@ -19,8 +19,6 @@ import CustomBlockControls from './controls/CustomBlockControls';
 
 import { BLOCK_CONTROLS, INLINE_CONTROLS } from './controls';
 
-import renderers from './renderers';
-
 class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
@@ -62,6 +60,7 @@ class DraftJSEditor extends Component {
     this.confirmBlock = this._confirmBlock.bind(this);
     this.onBlockInputKeyDown = this._onBlockInputKeyDown.bind(this);
     this.onBlockDataChange = this._onBlockDataChange.bind(this);
+    this.renderBlock = this._renderBlock.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -227,11 +226,11 @@ class DraftJSEditor extends Component {
     }
   }
 
-  renderBlock(block) {
+  _renderBlock(block) {
     if (block.getType() === 'atomic') {
       const entityType = Entity.get(block.getEntityAt(0)).getType();
 
-      return renderers[entityType] ? renderers[entityType].getBlockRenderer() : null;
+      return this.props.customBlocks[entityType] ? this.props.customBlocks[entityType].getBlockRenderer() : null;
     }
 
     // fall back to default renderer
@@ -268,6 +267,7 @@ class DraftJSEditor extends Component {
     if (this.props.customBlockControls) {
       controls.push(
         <CustomBlockControls
+          renderers={this.props.customBlocks}
           controls={this.props.customBlockControls}
           display={this.props.controlDisplay}
           key="custom-block-controls"
@@ -318,7 +318,7 @@ class DraftJSEditor extends Component {
 
     let blockInput;
     if (this.state.showCustomBlockInput) {
-      blockInput = renderers[this.state.customBlockType].renderInputForm(
+      blockInput = this.props.customBlocks[this.state.customBlockType].renderInputForm(
         this.state.customBlockData,
         this.onBlockDataChange,
         this.onBlockInputKeyDown,
@@ -367,6 +367,7 @@ DraftJSEditor.propTypes = {
   onChange: React.PropTypes.func,
   placeholder: React.PropTypes.string,
   readOnly: React.PropTypes.bool,
+  customBlocks: React.PropTypes.object,
   spellCheck: React.PropTypes.bool,
   stripPastedStyles: React.PropTypes.bool,
 };
@@ -375,7 +376,8 @@ DraftJSEditor.defaultProps = {
   blockControls: BLOCK_CONTROLS,
   controlDisplay: 'block',
   inlineControls: INLINE_CONTROLS,
-  customBlockControls: ['IMG', 'IFRAME'],
+  customBlockControls: [],
+  customBlocks: {},
   placeholder: '',
   readOnly: false,
   spellCheck: true,
