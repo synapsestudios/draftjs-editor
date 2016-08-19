@@ -5,7 +5,7 @@ export default {
   getBlockRenderer() {
     return {
       component: props => {
-        const entity = Entity.get(props.block.getEntityAt(0));
+        const entity = Entity.get(props.block.getEntityAt(0)); // eslint-disable-line
         const { src, alt } = entity.getData();
         return <img src={src} alt={alt} />;
       },
@@ -25,14 +25,14 @@ export default {
     return `<img src="${data.src}" alt="${data.alt}" />`;
   },
   renderInputForm(data, onDataChange, onKeyDown, onSubmit) {
-    const updateSrc = (e) => {
+    const updateSrc = e => {
       onDataChange({
         src: e.target.value,
         alt: data.alt,
       });
     };
 
-    const updateAlt = (e) => {
+    const updateAlt = e => {
       onDataChange({
         src: data.src,
         alt: e.target.value,
@@ -47,6 +47,7 @@ export default {
           value={data.src}
           onKeyDown={onKeyDown}
           placeholder="URL"
+          ref={c => { this.refs.customBlockInput = c; }}
         />
         <input
           onChange={updateAlt}
