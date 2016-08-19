@@ -21,6 +21,8 @@ It also exports the following utilities:
 * `customBlocks` (object) - An object containing the custom blocks you want the editor to render, see `defaultBlocks` for examples
 * `customBlockControls` (array) - An array of keys of custom blocks to render the controls for
 
+### `Renderer` Methods
+* `convertRawToHTML(rawContent)` - Takes raw DraftJS state object and renders it to HTML
 
 ### Styles
 Styles are not included by default. Include `scss/draftjs-editor.scss` in your local app.scss file to include the base styles.
