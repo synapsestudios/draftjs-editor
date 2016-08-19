@@ -184,16 +184,18 @@ class DraftJSEditor extends Component {
     this.onChange(RichUtils.toggleLink(editorState, selection, null));
   }
 
-  _confirmBlock() {
+  _confirmBlock(e, data) {
     this.setState({
       customBlockData: {},
       customBlockType: null,
       editorState: this._insertCustomBlock(
         this.state.editorState,
         this.state.customBlockType,
-        this.state.customBlockData
+        data || this.state.customBlockData
       ),
       showCustomBlockInput: false,
+    }, () => {
+      setTimeout(() => this.focus(), 0);
     });
   }
 
@@ -222,7 +224,11 @@ class DraftJSEditor extends Component {
         customBlockData: {},
       });
     } else {
-      this.setState(nextState);
+      this.setState(nextState, () => {
+        if (this.refs.customBlockInput) {
+          this.refs.customBlockInput.focus();
+        }
+      });
     }
   }
 
@@ -318,11 +324,14 @@ class DraftJSEditor extends Component {
 
     let blockInput;
     if (this.state.showCustomBlockInput) {
-      blockInput = this.props.customBlocks[this.state.customBlockType].renderInputForm(
-        this.state.customBlockData,
-        this.onBlockDataChange,
-        this.onBlockInputKeyDown,
-        this.confirmBlock
+      blockInput = this.props.customBlocks[this.state.customBlockType].renderInputForm.apply(
+        this,
+        [
+          this.state.customBlockData,
+          this.onBlockDataChange,
+          this.onBlockInputKeyDown,
+          this.confirmBlock,
+        ]
       );
     }
 
