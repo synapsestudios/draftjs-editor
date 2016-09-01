@@ -15,9 +15,9 @@ const linkStrategy = (contentBlock, callback) => {
 };
 
 const Link = (props) => {
-  const { url } = Entity.get(props.entityKey).getData();
+  const { target, url } = Entity.get(props.entityKey).getData();
   return (
-    <a href={url}>
+    <a href={url} target={target}>
       {props.children}
     </a>
   );

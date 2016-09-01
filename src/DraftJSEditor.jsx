@@ -140,7 +140,7 @@ class DraftJSEditor extends Component {
 
   _confirmLink() {
     const { editorState, urlValue } = this.state;
-    const entityKey = Entity.create('LINK', 'MUTABLE', { url: urlValue });
+    const entityKey = Entity.create('LINK', 'MUTABLE', { target: this.props.linkTarget, url: urlValue });
 
     this.onChange(
       RichUtils.toggleLink(
@@ -373,6 +373,7 @@ DraftJSEditor.propTypes = {
     React.PropTypes.bool,
     React.PropTypes.arrayOf(React.PropTypes.string),
   ]),
+  linkTarget: React.PropTypes.oneOf(['_blank', '_parent', '_self', '_top']),
   onChange: React.PropTypes.func,
   placeholder: React.PropTypes.string,
   readOnly: React.PropTypes.bool,
@@ -387,6 +388,7 @@ DraftJSEditor.defaultProps = {
   inlineControls: INLINE_CONTROLS,
   customBlockControls: [],
   customBlocks: {},
+  linkTarget: '_blank',
   placeholder: '',
   readOnly: false,
   spellCheck: true,
