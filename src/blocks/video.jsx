@@ -76,6 +76,7 @@ export default {
           type="text"
           value={data.src}
           onKeyDown={onKeyDown}
+          placeholder="URL"
           ref={c => { this.refs.customBlockInput = c; }}
         />
         <button onMouseDown={handleSubmit}>
