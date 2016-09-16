@@ -20,6 +20,7 @@ function CustomBlockControls({ controls, display, onClick, customBlocks }) {
           key={`${key}-button`}
           active={false}
           label={customBlocks[key].getLabel()}
+          icon={typeof customBlocks[key].getIcon === 'function' ? customBlocks[key].getIcon() : null}
           onToggle={getClickHandlerForType(key)}
           style={''}
         />
