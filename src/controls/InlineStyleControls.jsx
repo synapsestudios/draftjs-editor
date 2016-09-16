@@ -16,6 +16,7 @@ function InlineStyleControls({ controls, display, editorState, onToggle }) {
                 key={type.label}
                 active={currentStyle.has(type.style)}
                 label={type.label}
+                icon={type.icon}
                 onToggle={onToggle}
                 style={type.style}
               />

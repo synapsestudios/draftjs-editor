@@ -18,7 +18,7 @@ class StyleButton extends Component {
 
     return (
       <span className={className} onMouseDown={this.onToggle}>
-        {this.props.label}
+        {this.props.icon ? this.props.icon : this.props.label}
       </span>
     );
   }
@@ -29,6 +29,7 @@ StyleButton.propTypes = {
   style: PropTypes.string,
   active: PropTypes.bool,
   label: PropTypes.string,
+  icon: PropTypes.node,
 };
 
 export default StyleButton;
