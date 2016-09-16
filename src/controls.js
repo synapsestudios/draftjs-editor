@@ -11,6 +11,7 @@ import H5 from './icons/H5';
 import H6 from './icons/H6';
 import Italic from './icons/Italic';
 import Link from './icons/Link';
+import Monospace from './icons/Monospace';
 import OrderedList from './icons/OrderedList';
 import Underline from './icons/Underline';
 import UnorderedList from './icons/UnorderedList';
@@ -32,6 +33,7 @@ export const INLINE_STYLES = [
   { label: 'Bold', style: 'BOLD', icon: <Bold /> },
   { label: 'Italic', style: 'ITALIC', icon: <Italic /> },
   { label: 'Underline', style: 'UNDERLINE', icon: <Underline /> },
+  { label: 'Monospace', style: 'CODE', icon: <Monospace /> },
   { label: 'Link', style: 'LINK', icon: <Link /> },
 ];
 
