@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v2.4.0
+* Replace default controls with individual icons, added mouseover hover that displays label text
+* Fixed bug with active custom control styling not toggling on/off when selected
+
 ## v2.3.0
 * Remove default styling for h1/h2/h3/etc. from draftjs scss file– this should be handled by the app, not by draftjs editor
 * Rather than rendering empty divs, we won't render the control blocks if the editor has the readOnly prop passed to it
