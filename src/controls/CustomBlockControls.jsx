@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 import StyleButton from './StyleButton';
 
-function CustomBlockControls({ controls, display, onClick, customBlocks }) {
+function CustomBlockControls({ controls, display, onClick, customBlocks, customBlockType }) {
   let buttons = [];
 
   const getClickHandlerForType = type => () => {
@@ -18,8 +18,9 @@ function CustomBlockControls({ controls, display, onClick, customBlocks }) {
       buttons.push(
         <StyleButton
           key={`${key}-button`}
-          active={false}
+          active={key === customBlockType}
           label={customBlocks[key].getLabel()}
+          icon={typeof customBlocks[key].getIcon === 'function' ? customBlocks[key].getIcon() : null}
           onToggle={getClickHandlerForType(key)}
           style={''}
         />

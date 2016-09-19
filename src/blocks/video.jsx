@@ -1,5 +1,6 @@
 import { Entity } from 'draft-js';
 import React, { Component } from 'react';
+import Video from '../icons/Video';
 
 const youtubeParser = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig; // eslint-disable-line
 const vimeoParser = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/ig;
@@ -33,6 +34,9 @@ export default {
   },
   getLabel() {
     return 'Video';
+  },
+  getIcon() {
+    return <Video />;
   },
   renderHTML(data) {
     return `<iframe src="${data.src}" allowFullScreen></iframe>`;
@@ -72,6 +76,7 @@ export default {
           type="text"
           value={data.src}
           onKeyDown={onKeyDown}
+          placeholder="URL"
           ref={c => { this.refs.customBlockInput = c; }}
         />
         <button onMouseDown={handleSubmit}>

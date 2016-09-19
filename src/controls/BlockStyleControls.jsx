@@ -20,6 +20,7 @@ function BlockStyleControls({ controls, display, editorState, onToggle }) {
                 key={type.label}
                 active={type.style === blockType}
                 label={type.label}
+                icon={type.icon}
                 onToggle={onToggle}
                 style={type.style}
               />
