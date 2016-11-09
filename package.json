@@ -1,6 +1,6 @@
 {
   "name": "@synapsestudios/draftjs-editor",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios",
   "author": "Synapse Studios",
   "main": "lib/index.js",

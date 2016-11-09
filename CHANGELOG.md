@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## v2.4.1
+* Allow readOnly editor views to update when their props change
+
 ## v2.4.0
 * Replace default controls with individual icons, added mouseover hover that displays label text
 * Fixed bug with active custom control styling not toggling on/off when selected
