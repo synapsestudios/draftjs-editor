@@ -68,8 +68,8 @@ class DraftJSEditor extends Component {
 
     if (
       newProps.content &&
-      ! this.props.content &&
-      ! contentState.hasText()
+      (! this.props.content || this.props.readOnly) &&
+      (! contentState.hasText() || this.props.readOnly)
     ) {
       const editorState = EditorState.createWithContent(convertFromRaw(newProps.content));
       this.setState({ editorState });
