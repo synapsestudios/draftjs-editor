@@ -23,14 +23,14 @@ class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
 
-    const decorator = new CompositeDecorator([
+    this.decorator = new CompositeDecorator([
       linkDecorator,
     ]);
 
-    let editorState = EditorState.createEmpty(decorator);
+    let editorState = EditorState.createEmpty(this.decorator);
 
     if (props.content) {
-      editorState = EditorState.createWithContent(convertFromRaw(props.content), decorator);
+      editorState = EditorState.createWithContent(convertFromRaw(props.content), this.decorator);
     }
 
     this.state = {
@@ -71,7 +71,7 @@ class DraftJSEditor extends Component {
       (! this.props.content || this.props.readOnly) &&
       (! contentState.hasText() || this.props.readOnly)
     ) {
-      const editorState = EditorState.createWithContent(convertFromRaw(newProps.content), decorator);
+      const editorState = EditorState.createWithContent(convertFromRaw(newProps.content), this.decorator);
       this.setState({ editorState });
     }
   }
