@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## v2.4.2
+* Fix issue with link decorators not being applied to loaded content
+
 ## v2.4.1
 * Allow readOnly editor views to update when their props change
 
