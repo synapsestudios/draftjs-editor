@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## v2.4.3
+* Fix issue with undefined variable
+
 ## v2.4.2
 * Fix issue with link decorators not being applied to loaded content
 
