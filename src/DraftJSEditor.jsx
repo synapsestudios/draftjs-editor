@@ -23,14 +23,15 @@ class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
 
-    this.decorator = new CompositeDecorator([
-      linkDecorator,
-    ]);
+    this.decorator = new CompositeDecorator([linkDecorator]);
 
     let editorState = EditorState.createEmpty(this.decorator);
 
     if (props.content) {
-      editorState = EditorState.createWithContent(convertFromRaw(props.content), this.decorator);
+      editorState = EditorState.createWithContent(
+        convertFromRaw(props.content),
+        this.decorator
+      );
     }
 
     this.state = {
@@ -48,7 +49,8 @@ class DraftJSEditor extends Component {
     this.handleKeyCommand = command => this._handleKeyCommand(command);
     this.toggleBlockType = type => this._toggleBlockType(type);
     this.toggleInlineStyle = style => this._toggleInlineStyle(style);
-    this.toggleCustomBlockInput = nextState => this._toggleCustomBlockInput(nextState);
+    this.toggleCustomBlockInput = nextState =>
+      this._toggleCustomBlockInput(nextState);
 
     this.closeLinkPrompt = this._closeLinkPrompt.bind(this);
     this.confirmLink = this._confirmLink.bind(this);
@@ -68,10 +70,13 @@ class DraftJSEditor extends Component {
 
     if (
       newProps.content &&
-      (! this.props.content || this.props.readOnly) &&
-      (! contentState.hasText() || this.props.readOnly)
+      (!this.props.content || this.props.readOnly) &&
+      (!contentState.hasText() || this.props.readOnly)
     ) {
-      const editorState = EditorState.createWithContent(convertFromRaw(newProps.content), this.decorator);
+      const editorState = EditorState.createWithContent(
+        convertFromRaw(newProps.content),
+        this.decorator
+      );
       this.setState({ editorState });
     }
   }
@@ -101,53 +106,47 @@ class DraftJSEditor extends Component {
   }
 
   _toggleBlockType(blockType) {
-    this.onChange(
-      RichUtils.toggleBlockType(
-        this.state.editorState,
-        blockType
-      )
-    );
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
   }
 
   _toggleInlineStyle(inlineStyle) {
     if (inlineStyle === 'LINK') {
-      if (! this.state.showUrlInput) {
+      if (!this.state.showUrlInput) {
         this.promptForLink();
       } else {
         this.removeLink();
       }
     } else {
       this.onChange(
-        RichUtils.toggleInlineStyle(
-          this.state.editorState,
-          inlineStyle
-        )
+        RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
       );
     }
   }
 
   // Link handling
   _closeLinkPrompt() {
-    this.setState({
-      showUrlInput: false,
-      urlValue: '',
-    }, () => {
-      setTimeout(() => {
-        this.focus();
-      }, 0);
-    });
+    this.setState(
+      {
+        showUrlInput: false,
+        urlValue: '',
+      },
+      () => {
+        setTimeout(() => {
+          this.focus();
+        }, 0);
+      }
+    );
   }
 
   _confirmLink() {
     const { editorState, urlValue } = this.state;
-    const entityKey = Entity.create('LINK', 'MUTABLE', { target: this.props.linkTarget, url: urlValue });
+    const entityKey = Entity.create('LINK', 'MUTABLE', {
+      target: this.props.linkTarget,
+      url: urlValue,
+    });
 
     this.onChange(
-      RichUtils.toggleLink(
-        editorState,
-        editorState.getSelection(),
-        entityKey
-      )
+      RichUtils.toggleLink(editorState, editorState.getSelection(), entityKey)
     );
 
     this.closeLinkPrompt();
@@ -163,16 +162,19 @@ class DraftJSEditor extends Component {
     const { editorState } = this.state;
     const selection = editorState.getSelection();
 
-    if (! selection.isCollapsed()) {
+    if (!selection.isCollapsed()) {
       if (RichUtils.currentBlockContainsLink(editorState)) {
         this.removeLink();
       } else {
-        this.setState({
-          showUrlInput: true,
-          urlValue: '',
-        }, () => {
-          setTimeout(() => this.refs.url.focus(), 0);
-        });
+        this.setState(
+          {
+            showUrlInput: true,
+            urlValue: '',
+          },
+          () => {
+            setTimeout(() => this.refs.url.focus(), 0);
+          }
+        );
       }
     }
   }
@@ -185,18 +187,21 @@ class DraftJSEditor extends Component {
   }
 
   _confirmBlock(e, data) {
-    this.setState({
-      customBlockData: {},
-      customBlockType: null,
-      editorState: this._insertCustomBlock(
-        this.state.editorState,
-        this.state.customBlockType,
-        data || this.state.customBlockData
-      ),
-      showCustomBlockInput: false,
-    }, () => {
-      setTimeout(() => this.focus(), 0);
-    });
+    this.setState(
+      {
+        customBlockData: {},
+        customBlockType: null,
+        editorState: this._insertCustomBlock(
+          this.state.editorState,
+          this.state.customBlockType,
+          data || this.state.customBlockData
+        ),
+        showCustomBlockInput: false,
+      },
+      () => {
+        setTimeout(() => this.focus(), 0);
+      }
+    );
   }
 
   _onBlockInputKeyDown(e) {
@@ -217,7 +222,10 @@ class DraftJSEditor extends Component {
   }
 
   _toggleCustomBlockInput(nextState) {
-    if (this.state.showCustomBlockInput && nextState.customBlockType === this.state.customBlockType) {
+    if (
+      this.state.showCustomBlockInput &&
+      nextState.customBlockType === this.state.customBlockType
+    ) {
       this.setState({
         showCustomBlockInput: false,
         customBlockType: null,
@@ -236,7 +244,9 @@ class DraftJSEditor extends Component {
     if (block.getType() === 'atomic') {
       const entityType = Entity.get(block.getEntityAt(0)).getType();
 
-      return this.props.customBlocks[entityType] ? this.props.customBlocks[entityType].getBlockRenderer() : null;
+      return this.props.customBlocks[entityType]
+        ? this.props.customBlocks[entityType].getBlockRenderer()
+        : null;
     }
 
     // fall back to default renderer
@@ -325,15 +335,14 @@ class DraftJSEditor extends Component {
 
     let blockInput;
     if (this.state.showCustomBlockInput) {
-      blockInput = this.props.customBlocks[this.state.customBlockType].renderInputForm.apply(
-        this,
-        [
-          this.state.customBlockData,
-          this.onBlockDataChange,
-          this.onBlockInputKeyDown,
-          this.confirmBlock,
-        ]
-      );
+      blockInput = this.props.customBlocks[
+        this.state.customBlockType
+      ].renderInputForm.apply(this, [
+        this.state.customBlockData,
+        this.onBlockDataChange,
+        this.onBlockInputKeyDown,
+        this.confirmBlock,
+      ]);
     }
 
     return (

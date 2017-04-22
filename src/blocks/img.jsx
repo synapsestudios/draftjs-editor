@@ -51,7 +51,9 @@ export default {
           value={data.src}
           onKeyDown={onKeyDown}
           placeholder="URL"
-          ref={c => { this.refs.customBlockInput = c; }}
+          ref={c => {
+            this.refs.customBlockInput = c;
+          }}
         />
         <input
           onChange={updateAlt}

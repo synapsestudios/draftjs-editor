@@ -1,23 +1,24 @@
-import { Entity } from 'draft-js';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Entity } from 'draft-js';
 import Video from '../icons/Video';
 
-const youtubeParser = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig; // eslint-disable-line
-const vimeoParser = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/ig;
+const youtubeParser = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/gi; // eslint-disable-line
+const vimeoParser = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/gi;
 
 class EditorVideoBlock extends Component {
   shouldComponentUpdate(nextProps) {
-    return (nextProps.block !== this.props.block);
+    return nextProps.block !== this.props.block;
   }
   render() {
     const entity = Entity.get(this.props.block.getEntityAt(0));
     const { src } = entity.getData();
-    return <iframe src={src} allowFullScreen></iframe>;
+    return <iframe src={src} allowFullScreen />;
   }
 }
 
 EditorVideoBlock.propTypes = {
-  block: React.PropTypes.object,
+  block: PropTypes.object,
 };
 
 export default {
@@ -77,7 +78,9 @@ export default {
           value={data.src}
           onKeyDown={onKeyDown}
           placeholder="URL"
-          ref={c => { this.refs.customBlockInput = c; }}
+          ref={c => {
+            this.refs.customBlockInput = c;
+          }}
         />
         <button onMouseDown={handleSubmit}>
           Confirm

@@ -1,6 +1,3 @@
 {
-    "extends": "airbnb",
-    "rules": {
-        "max-len": [2, 120, 2]
-    }
+    "extends": "react-app",
 }

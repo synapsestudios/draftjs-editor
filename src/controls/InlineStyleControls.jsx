@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import StyleButton from './StyleButton';
 
 import { INLINE_CONTROLS, INLINE_STYLES, validator } from '../controls';
@@ -8,32 +9,30 @@ function InlineStyleControls({ controls, display, editorState, onToggle }) {
 
   return (
     <div className="DraftJSEditor-controls" style={{ display }}>
-      {INLINE_STYLES.map(
-        type => {
-          if (controls.indexOf(type.label) !== -1) {
-            return (
-              <StyleButton
-                key={type.label}
-                active={currentStyle.has(type.style)}
-                label={type.label}
-                icon={type.icon}
-                onToggle={onToggle}
-                style={type.style}
-              />
-            );
-          }
+      {INLINE_STYLES.map(type => {
+        if (controls.indexOf(type.label) !== -1) {
+          return (
+            <StyleButton
+              key={type.label}
+              active={currentStyle.has(type.style)}
+              label={type.label}
+              icon={type.icon}
+              onToggle={onToggle}
+              style={type.style}
+            />
+          );
         }
-      )}
+      })}
     </div>
   );
 }
 
 InlineStyleControls.propTypes = {
-  controls: React.PropTypes.oneOfType([
-    React.PropTypes.bool,
-    React.PropTypes.arrayOf(validator(INLINE_CONTROLS)),
+  controls: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.arrayOf(validator(INLINE_CONTROLS)),
   ]),
-  display: React.PropTypes.oneOf(['block', 'inline']),
+  display: PropTypes.oneOf(['block', 'inline']),
   editorState: PropTypes.object,
   onToggle: PropTypes.func,
 };

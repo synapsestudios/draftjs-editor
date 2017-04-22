@@ -15,7 +15,9 @@ export default class Renderer {
           const data = Entity.get(block.getEntityAt(0)).getData();
           const type = Entity.get(block.getEntityAt(0)).getType();
 
-          return this.customBlocks[type] ? this.customBlocks[type].renderHTML(data) : null;
+          return this.customBlocks[type]
+            ? this.customBlocks[type].renderHTML(data)
+            : null;
         },
       },
     };

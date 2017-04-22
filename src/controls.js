@@ -42,9 +42,11 @@ export const INLINE_CONTROLS = INLINE_STYLES.map(style => style.label);
 
 export function validator(controls) {
   return (propValue, key, componentName, location, propFullName) => {
-    const errors = propValue.map(value => (controls.indexOf(value) !== -1));
-    if (! errors.every(error => !! error)) {
-      return new Error(`Invalid prop ${propFullName} supplied to ${componentName}`);
+    const errors = propValue.map(value => controls.indexOf(value) !== -1);
+    if (!errors.every(error => !!error)) {
+      return new Error(
+        `Invalid prop ${propFullName} supplied to ${componentName}`
+      );
     }
   };
 }
