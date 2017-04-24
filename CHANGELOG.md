@@ -1,5 +1,12 @@
 CHANGELOG
 =========
+## v2.6.0
+* Update for React v15.5 deprecation warnings: PropTypes is now a separate `prop-types` package
+* Added prettier formatting
+* Updated all dependencies– most notably babel v5 -> v6.
+* Added storybook for demo/gh-pages/development purposes (no more webpack config!)
+
+## v2.5.0
 
 ## v2.4.3
 * Fix issue with undefined variable
