@@ -1,8 +1,15 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import StyleButton from './StyleButton';
 
-function CustomBlockControls({ controls, display, onClick, customBlocks, customBlockType }) {
+function CustomBlockControls({
+  controls,
+  display,
+  onClick,
+  customBlocks,
+  customBlockType,
+}) {
   let buttons = [];
 
   const getClickHandlerForType = type => () => {
@@ -14,13 +21,21 @@ function CustomBlockControls({ controls, display, onClick, customBlocks, customB
   };
 
   Object.keys(customBlocks).forEach(key => {
-    if (customBlocks.hasOwnProperty(key) && controls && controls.indexOf(key) > -1) {
+    if (
+      customBlocks.hasOwnProperty(key) &&
+      controls &&
+      controls.indexOf(key) > -1
+    ) {
       buttons.push(
         <StyleButton
           key={`${key}-button`}
           active={key === customBlockType}
           label={customBlocks[key].getLabel()}
-          icon={typeof customBlocks[key].getIcon === 'function' ? customBlocks[key].getIcon() : null}
+          icon={
+            typeof customBlocks[key].getIcon === 'function'
+              ? customBlocks[key].getIcon()
+              : null
+          }
           onToggle={getClickHandlerForType(key)}
           style={''}
         />
@@ -36,11 +51,11 @@ function CustomBlockControls({ controls, display, onClick, customBlocks, customB
 }
 
 CustomBlockControls.propTypes = {
-  controls: React.PropTypes.oneOfType([
-    React.PropTypes.bool,
-    React.PropTypes.arrayOf(React.PropTypes.string),
+  controls: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
   ]),
-  display: React.PropTypes.oneOf(['block', 'inline']),
+  display: PropTypes.oneOf(['block', 'inline']),
   onClick: PropTypes.func,
   customBlocks: PropTypes.object,
 };

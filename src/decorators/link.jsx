@@ -1,20 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Entity } from 'draft-js';
 
 const linkStrategy = (contentBlock, callback) => {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        Entity.get(entityKey).getType() === 'LINK'
-      );
-    },
-    callback
-  );
+  contentBlock.findEntityRanges(character => {
+    const entityKey = character.getEntity();
+    return entityKey !== null && Entity.get(entityKey).getType() === 'LINK';
+  }, callback);
 };
 
-const Link = (props) => {
+const Link = props => {
   const { target, url } = Entity.get(props.entityKey).getData();
   return (
     <a href={url} target={target}>
@@ -24,8 +19,8 @@ const Link = (props) => {
 };
 
 Link.propTypes = {
-  entityKey: React.PropTypes.any,
-  children: React.PropTypes.any,
+  entityKey: PropTypes.any,
+  children: PropTypes.any,
 };
 
 export default {

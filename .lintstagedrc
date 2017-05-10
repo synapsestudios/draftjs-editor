@@ -1,0 +1,7 @@
+{
+  "{src, storybook}/**/*.js": [
+    "eslint",
+    "prettier --single-quote --trailing-comma es5 --write",
+    "git add"
+  ]
+}
