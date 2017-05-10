@@ -1,6 +1,6 @@
 CHANGELOG
 =========
-## v2.6.0
+## v3.0.0
 * Update for React v15.5 deprecation warnings: PropTypes is now a separate `prop-types` package
 * Added prettier formatting
 * Updated all dependencies– most notably babel v5 -> v6.
