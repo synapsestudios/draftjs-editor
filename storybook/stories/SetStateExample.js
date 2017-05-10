@@ -35,7 +35,7 @@ class SetStateExample extends Component {
         <p className="p text-center">
           View this project on
           {' '}
-          <a href="https://github.com/synapsestudios/draftjs-editor">Github</a>
+          <a href="https://github.com/synapsestudios/draftjs-editor" target="_blank">Github</a>
         </p>
         <DraftJSEditor
           content={this.state.content || null}
