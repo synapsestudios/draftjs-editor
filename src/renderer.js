@@ -1,4 +1,4 @@
-import { convertFromRaw, Entity } from 'draft-js';
+import { convertFromRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 
 export default class Renderer {
