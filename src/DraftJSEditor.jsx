@@ -199,6 +199,8 @@ class DraftJSEditor extends Component {
         showCustomBlockInput: false,
       },
       () => {
+        const contentState = this.state.editorState.getCurrentContent();
+        this.props.onChange(convertToRaw(contentState));
         setTimeout(() => this.focus(), 0);
       }
     );
