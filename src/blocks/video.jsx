@@ -64,12 +64,6 @@ export default {
       return transformed;
     };
 
-    const handleSubmit = e => {
-      onSubmit(e, {
-        src: transformSource(data.src),
-      });
-    };
-
     return (
       <div>
         <input
@@ -82,7 +76,9 @@ export default {
             this.refs.customBlockInput = c;
           }}
         />
-        <button onMouseDown={handleSubmit}>
+        <button
+          onClick={() => onSubmit({ src: transformSource(data.src) })}
+        >
           Confirm
         </button>
       </div>
