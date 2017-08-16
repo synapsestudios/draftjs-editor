@@ -9,11 +9,14 @@ export default class Renderer {
   }
 
   convertRawToHTML(rawContent) {
+    let entityMapIndex = 0;
     const options = {
       blockRenderers: {
         atomic: block => {
-          const data = Entity.get(block.getEntityAt(0)).getData();
-          const type = Entity.get(block.getEntityAt(0)).getType();
+          const entity = rawContent.entityMap[entityMapIndex];
+          const data = entity.data;
+          const type = entity.type;
+          entityMapIndex += 1;
 
           return this.customBlocks[type]
             ? this.customBlocks[type].renderHTML(data)
