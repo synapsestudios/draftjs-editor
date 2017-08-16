@@ -1,5 +1,10 @@
 CHANGELOG
 =========
+## v3.0.1
+* Fix deprecation warnings
+* Fix image and video blocks
+* Fix onChange not firing when custom blocks are added
+
 ## v3.0.0
 * Update for React v15.5 deprecation warnings: PropTypes is now a separate `prop-types` package
 * Added prettier formatting
