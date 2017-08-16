@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Entity } from 'draft-js';
 
-const linkStrategy = (contentBlock, callback) => {
+const linkStrategy = (contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges(character => {
     const entityKey = character.getEntity();
-    return entityKey !== null && Entity.get(entityKey).getType() === 'LINK';
+    return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
   }, callback);
 };
 
 const Link = props => {
-  const { target, url } = Entity.get(props.entityKey).getData();
+  const { target, url } = props.contentState.getEntity(props.entityKey).getData();
   return (
     <a href={url} target={target}>
       {props.children}

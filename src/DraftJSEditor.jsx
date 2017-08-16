@@ -7,7 +7,6 @@ import {
   CompositeDecorator,
   Editor,
   EditorState,
-  Entity,
   RichUtils,
 } from 'draft-js';
 
@@ -62,7 +61,7 @@ class DraftJSEditor extends Component {
     this.confirmBlock = this._confirmBlock.bind(this);
     this.onBlockInputKeyDown = this._onBlockInputKeyDown.bind(this);
     this.onBlockDataChange = this._onBlockDataChange.bind(this);
-    this.renderBlock = this._renderBlock.bind(this);
+    this.renderBlock = this._renderBlock.bind(this, editorState.getCurrentContent());
   }
 
   componentWillReceiveProps(newProps) {
@@ -140,10 +139,11 @@ class DraftJSEditor extends Component {
 
   _confirmLink() {
     const { editorState, urlValue } = this.state;
-    const entityKey = Entity.create('LINK', 'MUTABLE', {
+    const contentState = editorState.getCurrentContent().createEntity('LINK', 'MUTABLE', {
       target: this.props.linkTarget,
       url: urlValue,
     });
+    const entityKey = contentState.getLastCreatedEntityKey();
 
     this.onChange(
       RichUtils.toggleLink(editorState, editorState.getSelection(), entityKey)
@@ -186,7 +186,7 @@ class DraftJSEditor extends Component {
     this.onChange(RichUtils.toggleLink(editorState, selection, null));
   }
 
-  _confirmBlock(e, data) {
+  _confirmBlock(data) {
     this.setState(
       {
         customBlockData: {},
@@ -215,7 +215,8 @@ class DraftJSEditor extends Component {
   }
 
   _insertCustomBlock(editorState, type, data) {
-    const entityKey = Entity.create(type, 'IMMUTABLE', data);
+    const contentState = editorState.getCurrentContent().createEntity(type, 'IMMUTABLE', data);
+    const entityKey = contentState.getLastCreatedEntityKey();
 
     // if you use an empty string for the block content here Draft will die
     return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
@@ -240,9 +241,9 @@ class DraftJSEditor extends Component {
     }
   }
 
-  _renderBlock(block) {
+  _renderBlock(contentState, block) {
     if (block.getType() === 'atomic') {
-      const entityType = Entity.get(block.getEntityAt(0)).getType();
+      const entityType = contentState.getEntity(block.getEntityAt(0)).getType();
 
       return this.props.customBlocks[entityType]
         ? this.props.customBlocks[entityType].getBlockRenderer()
