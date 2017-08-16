@@ -1,6 +1,6 @@
 CHANGELOG
 =========
-## v3.0.1
+## v3.0.2
 * Fix deprecation warnings
 * Fix image and video blocks
 * Fix onChange not firing when custom blocks are added
