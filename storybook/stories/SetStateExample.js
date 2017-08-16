@@ -30,7 +30,7 @@ class SetStateExample extends Component {
       <div>
         <h1>@synapsestudios/draftjs-editor</h1>
         <p className="p text-center">
-          A customized WYSIWYG editor utilizing Facebook's Draft.js library
+          {`A customized WYSIWYG editor utilizing Facebook's Draft.js library`}
         </p>
         <p className="p text-center">
           View this project on
