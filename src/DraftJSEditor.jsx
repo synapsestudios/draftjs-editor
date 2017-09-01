@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   AtomicBlockUtils,
   convertFromRaw,
@@ -372,27 +373,27 @@ class DraftJSEditor extends Component {
 }
 
 DraftJSEditor.propTypes = {
-  blockControls: React.PropTypes.oneOfType([
-    React.PropTypes.bool,
-    React.PropTypes.arrayOf(React.PropTypes.string),
+  blockControls: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
   ]),
-  customBlockControls: React.PropTypes.oneOfType([
-    React.PropTypes.bool,
-    React.PropTypes.arrayOf(React.PropTypes.string),
+  customBlockControls: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
   ]),
-  content: React.PropTypes.object,
-  controlDisplay: React.PropTypes.oneOf(['block', 'inline']),
-  inlineControls: React.PropTypes.oneOfType([
-    React.PropTypes.bool,
-    React.PropTypes.arrayOf(React.PropTypes.string),
+  content: PropTypes.object,
+  controlDisplay: PropTypes.oneOf(['block', 'inline']),
+  inlineControls: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
   ]),
-  linkTarget: React.PropTypes.oneOf(['_blank', '_parent', '_self', '_top']),
-  onChange: React.PropTypes.func,
-  placeholder: React.PropTypes.string,
-  readOnly: React.PropTypes.bool,
-  customBlocks: React.PropTypes.object,
-  spellCheck: React.PropTypes.bool,
-  stripPastedStyles: React.PropTypes.bool,
+  linkTarget: PropTypes.oneOf(['_blank', '_parent', '_self', '_top']),
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  readOnly: PropTypes.bool,
+  customBlocks: PropTypes.object,
+  spellCheck: PropTypes.bool,
+  stripPastedStyles: PropTypes.bool,
 };
 
 DraftJSEditor.defaultProps = {
