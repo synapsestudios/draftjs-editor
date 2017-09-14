@@ -22,7 +22,7 @@ class SetStateExample extends Component {
 
   onChange = content => {
     action('onChange')(content); // Log to storybook's "action-logger"
-    this.setState(content);
+    this.setState({ content });
   };
 
   render() {
@@ -30,7 +30,7 @@ class SetStateExample extends Component {
       <div>
         <h1>@synapsestudios/draftjs-editor</h1>
         <p className="p text-center">
-          A customized WYSIWYG editor utilizing Facebook's Draft.js library
+          {`A customized WYSIWYG editor utilizing Facebook's Draft.js library`}
         </p>
         <p className="p text-center">
           View this project on
@@ -39,7 +39,7 @@ class SetStateExample extends Component {
         </p>
         <DraftJSEditor
           content={this.state.content || null}
-          onChange={content => this.setState({ content })}
+          onChange={this.onChange}
           placeholder="Tell a story..."
           customBlocks={defaultBlocks}
           customBlockControls={Object.keys(defaultBlocks)}

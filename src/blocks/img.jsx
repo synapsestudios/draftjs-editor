@@ -1,4 +1,3 @@
-import { Entity } from 'draft-js';
 import React from 'react';
 import Photo from '../icons/Photo';
 
@@ -6,7 +5,7 @@ export default {
   getBlockRenderer() {
     return {
       component: props => {
-        const entity = Entity.get(props.block.getEntityAt(0)); // eslint-disable-line
+        const entity = props.contentState.getEntity(props.block.getEntityAt(0)); // eslint-disable-line
         const { src, alt } = entity.getData();
         return <img src={src} alt={alt} />;
       },
@@ -62,7 +61,7 @@ export default {
           onKeyDown={onKeyDown}
           placeholder="Alt text"
         />
-        <button onMouseDown={onSubmit}>
+        <button onClick={() => onSubmit(data)}>
           Confirm
         </button>
       </div>
