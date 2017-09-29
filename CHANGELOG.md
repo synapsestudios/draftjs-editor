@@ -1,5 +1,8 @@
 CHANGELOG
 =========
+## v3.0.3
+* Fix prop-type deprecation warning we missed in DraftJSEditor
+
 ## v3.0.2
 * Fix deprecation warnings
 * Fix image and video blocks
