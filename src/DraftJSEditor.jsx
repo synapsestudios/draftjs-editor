@@ -354,7 +354,7 @@ class DraftJSEditor extends Component {
         {!this.props.readOnly ? this.renderControls() : null}
         {!this.props.readOnly ? urlInput : null}
         {!this.props.readOnly ? blockInput : null}
-        <div className={className} onClick={this.focus}>
+        <div className={className}>
           <Editor
             blockRendererFn={this.renderBlock}
             editorState={this.state.editorState}
