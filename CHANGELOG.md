@@ -1,5 +1,8 @@
 CHANGELOG
 =========
+## v3.0.4
+* Remove onClick in wrapper div
+
 ## v3.0.3
 * Fix prop-type deprecation warning we missed in DraftJSEditor
 
