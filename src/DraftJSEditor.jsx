@@ -365,6 +365,7 @@ class DraftJSEditor extends Component {
             ref="editor"
             spellCheck={this.props.spellCheck}
             stripPastedStyles={this.props.stripPastedStyles}
+            {...this.props}
           />
         </div>
       </div>
