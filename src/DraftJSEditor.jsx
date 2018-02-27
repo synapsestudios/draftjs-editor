@@ -349,13 +349,33 @@ class DraftJSEditor extends Component {
       ]);
     }
 
+    const passedProps = this.props;
+
+    const cleanObject = (object, keyArray) => {
+      let newObj;
+      keyArray.forEach((x) => {
+        const {[x]: deletedKey, ...otherKeys} = object;
+        newObj = otherKeys;
+      })
+      return newObj;
+    }
+
+    const passableProps = cleanObject(passedProps, [
+      'content', 'customBlockControls', 'customBlocks',
+      'inlineControls', 'controlDisplay', 'containerStyle',
+    ]);
+
     return (
-      <div className="DraftJSEditor-root">
+      <div
+        className="DraftJSEditor-root"
+        style={this.props.containerStyle}
+      >
         {!this.props.readOnly ? this.renderControls() : null}
         {!this.props.readOnly ? urlInput : null}
         {!this.props.readOnly ? blockInput : null}
         <div className={className}>
           <Editor
+            {...passableProps}
             blockRendererFn={this.renderBlock}
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
@@ -394,6 +414,9 @@ DraftJSEditor.propTypes = {
   customBlocks: PropTypes.object,
   spellCheck: PropTypes.bool,
   stripPastedStyles: PropTypes.bool,
+  containerStyle: PropTypes.object,
+  editorKey: PropTypes.string,
+  textAlignment: PropTypes.string,
 };
 
 DraftJSEditor.defaultProps = {
