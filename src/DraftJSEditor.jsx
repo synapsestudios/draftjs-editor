@@ -13,6 +13,8 @@ import {
 
 import linkDecorator from './decorators/link';
 
+import '../styles/index.css';
+
 import BlockStyleControls from './controls/BlockStyleControls';
 import InlineStyleControls from './controls/InlineStyleControls';
 import CustomBlockControls from './controls/CustomBlockControls';
