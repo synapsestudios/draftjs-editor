@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "draft-js": "~0.10.0",
-    "draft-js-export-html": "~1.0.0",
+    "draft-js-export-html": "^1.2.0",
     "prop-types": "^15.5.9"
   },
   "devDependencies": {
