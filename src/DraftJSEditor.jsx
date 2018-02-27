@@ -13,7 +13,7 @@ import {
 
 import linkDecorator from './decorators/link';
 
-import '../styles/index.css';
+import '../lib/draftjs-editor.min.css';
 
 import BlockStyleControls from './controls/BlockStyleControls';
 import InlineStyleControls from './controls/InlineStyleControls';
