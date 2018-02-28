@@ -1,6 +1,6 @@
 {
   "name": "@synapsestudios/draftjs-editor",
-  "version": "3.0.4",
+  "version": "3.1.0",
   "description": "A customized WYSIWYG editor utilizing Facebook's Draft.js library",
   "repository": {
     "type": "git",
@@ -33,8 +33,8 @@
     "storybook-deploy": "npm run storybook-build && storybook-to-ghpages"
   },
   "dependencies": {
-    "draft-js": "^0.10.1",
-    "draft-js-export-html": "^0.5.4",
+    "draft-js": "~0.10.0",
+    "draft-js-export-html": "^1.2.0",
     "prop-types": "^15.5.9"
   },
   "devDependencies": {
@@ -62,7 +62,7 @@
     "stylus": "^0.54.5"
   },
   "peerDependencies": {
-    "react": "^15.3.0",
-    "react-dom": "^15.3.0"
+    "react": "~15.0.0 || ^16.0.0",
+    "react-dom": "~15.0.0 || ^16.0.0"
   }
 }
