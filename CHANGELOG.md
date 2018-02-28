@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+## v3.1.0
+* Adds `containerStyle` prop that allows for setting default inline styles for the wrapper component.
+* Fixes the ability to pass in all available draftJS props directly to the component.
+
 ## v3.0.4
 * Remove onClick in wrapper div
 
