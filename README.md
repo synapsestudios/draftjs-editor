@@ -3,8 +3,6 @@
 A simple WYSIWYG text editor utilizing Facebook's Draft.js library– customized by Synapse Studios
 
 [![npm version](https://img.shields.io/npm/v/@synapsestudios/draftjs-editor.svg?style=flat)](https://www.npmjs.com/package/@synapsestudios/draftjs-editor)
-[![draftjs-editor dependencies](https://img.shields.io/david/synapsestudios/draftjs-editor.svg)](https://david-dm.org/synapsestudios/draftjs-editor)
-[![draftjs-editor peer dependencies](https://img.shields.io/david/peer/synapsestudios/draftjs-editor.svg)](https://david-dm.org/synapsestudios/draftjs-editor?type=peer)
 
 ## Demo
 
@@ -42,7 +40,9 @@ import '@synapsestudios/draftjs-editor/lib/draftjs-editor.min.css';
 import '@synapsestudios/draftjs-editor/lib/draftjs-editor.css';
 ```
 
-#### Using Stylus
+#### Styling 
+The two main component classNames are `DraftJSEditor-root` for the container and `DraftJSEditor-editor` for the editor itself.
+
 If you are using Stylus you can import the .styl file into your build:
 ```styl
 @import '@synapsestudios/draftjs-editor/lib/draftjs-editor.styl';
@@ -51,6 +51,9 @@ If you are using Stylus you can import the .styl file into your build:
 ## API
 
 ### `Props`
+Props are automatically passed onto the DraftJS Editor component.  Anything usable from the api can also be passed into DraftJSEditor.
+
+* `containerStyle` (object) - passes inline styling directly into the parent component of the editor.  This can also be modified by using CSS to style the class name `DraftJSEditor-root`
 * `className` (string) - Classes to add to the editor component
 * `id` (string) - ID to add to the editor component
 * `customBlocks` (object) - An object containing the custom blocks you want the editor to render, see `defaultBlocks` for examples
@@ -67,3 +70,4 @@ To run the project on your own computer:
 * `yarn run storybook` or `npm run storybook`
 * Visit http://localhost:5000/
 * Changes made to files in the `src` directory should immediately compile and be visible in your browser.
+
