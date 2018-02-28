@@ -1,5 +1,11 @@
 CHANGELOG
 =========
+## v3.1.0
+* Added `containerStyle` prop to allow for the styling of the container surrounding the editor.
+* Added the ability to pass a sanitized prop into the component allowing for usage of all pieces of the DraftJS API
+* Updates dependencies of draft-js-export-html to prevent issues when working with post react 0.15.3.
+* Updates dependencies for react 16
+
 ## v3.0.4
 * Remove onClick in wrapper div
 

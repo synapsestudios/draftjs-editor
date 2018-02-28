@@ -4,6 +4,11 @@ import { DraftJSEditor, Renderer, defaultBlocks } from '../../src';
 
 const draftRenderer = new Renderer(defaultBlocks);
 
+const saneStyling = {
+  width: '500px',
+  height: '500px',
+}
+
 class SetStateExample extends Component {
   state = {
     content: {
@@ -38,6 +43,7 @@ class SetStateExample extends Component {
           <a href="https://github.com/synapsestudios/draftjs-editor" target="_blank">Github</a>
         </p>
         <DraftJSEditor
+          containerStyle={saneStyling}
           content={this.state.content || null}
           onChange={this.onChange}
           placeholder="Tell a story..."
