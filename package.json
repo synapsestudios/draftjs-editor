@@ -24,7 +24,7 @@
   "scripts": {
     "clean": "rm -rf lib && rm -rf .out",
     "build": "npm run clean && babel src -d lib && npm run build-stylus",
-    "build-stylus": "stylus styles/index.styl -o lib/draftjs-editor.css && stylus styles/index.styl -c -u autoprefixer-stylus -o lib/draftjs-editor.min.css && cp styles/index.styl lib/draftjs-editor.styl",
+    "build-stylus": "stylus styles/index.styl -o lib/draftjs-editor.css && stylus styles/index.styl -c -u autoprefixer-stylus -o lib/draftjs-editor.min.css && cp styles/index.styl lib/draftjs-editor.styl && cp scss/draftjs-editor.scss lib/",
     "precommit": "lint-staged",
     "prepublish": "eslint src && npm run build",
     "start": "npm run storybook",
