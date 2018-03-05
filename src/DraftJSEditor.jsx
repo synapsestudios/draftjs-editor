@@ -23,7 +23,9 @@ class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
 
-    this.decorator = new CompositeDecorator([linkDecorator]);
+    const decorators = props.decorators || [linkDecorator];
+
+    this.decorator = new CompositeDecorator(decorators);
 
     let editorState = EditorState.createEmpty(this.decorator);
 
@@ -398,6 +400,10 @@ DraftJSEditor.propTypes = {
   ]),
   content: PropTypes.object,
   controlDisplay: PropTypes.oneOf(['block', 'inline']),
+  decorators: PropTypes.arrayOf(PropTypes.shape({
+    strategy: PropTypes.object.isRequired,
+    component: PropTypes.object.isRequired,
+  })),
   inlineControls: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.arrayOf(PropTypes.string),
@@ -428,4 +434,3 @@ DraftJSEditor.defaultProps = {
 };
 
 export default DraftJSEditor;
-
