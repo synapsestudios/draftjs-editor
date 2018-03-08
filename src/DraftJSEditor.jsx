@@ -23,7 +23,9 @@ class DraftJSEditor extends Component {
   constructor(props) {
     super(props);
 
-    this.decorator = new CompositeDecorator([linkDecorator]);
+    const decorators = props.decorators || [linkDecorator];
+
+    this.decorator = new CompositeDecorator(decorators);
 
     let editorState = EditorState.createEmpty(this.decorator);
 
@@ -349,13 +351,28 @@ class DraftJSEditor extends Component {
       ]);
     }
 
+    const {
+      blockControls,
+      content,
+      customBlockControls,
+      customBlocks,
+      inlineControls,
+      controlDisplay,
+      containerStyle,
+      ...passableProps,
+    } = this.props;
+
     return (
-      <div className="DraftJSEditor-root">
+      <div
+        className="DraftJSEditor-root"
+        style={this.props.containerStyle}
+      >
         {!this.props.readOnly ? this.renderControls() : null}
         {!this.props.readOnly ? urlInput : null}
         {!this.props.readOnly ? blockInput : null}
         <div className={className}>
           <Editor
+            {...passableProps}
             blockRendererFn={this.renderBlock}
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
@@ -383,6 +400,10 @@ DraftJSEditor.propTypes = {
   ]),
   content: PropTypes.object,
   controlDisplay: PropTypes.oneOf(['block', 'inline']),
+  decorators: PropTypes.arrayOf(PropTypes.shape({
+    strategy: PropTypes.object.isRequired,
+    component: PropTypes.object.isRequired,
+  })),
   inlineControls: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.arrayOf(PropTypes.string),
@@ -394,6 +415,9 @@ DraftJSEditor.propTypes = {
   customBlocks: PropTypes.object,
   spellCheck: PropTypes.bool,
   stripPastedStyles: PropTypes.bool,
+  containerStyle: PropTypes.object,
+  editorKey: PropTypes.string,
+  textAlignment: PropTypes.string,
 };
 
 DraftJSEditor.defaultProps = {
