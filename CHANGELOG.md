@@ -6,6 +6,7 @@ CHANGELOG
 * Updates dependencies of draft-js-export-html to prevent issues when working with post react 0.15.3.
 * Updates dependencies for react 16
 * Includes scss, however this is deprecated and will be removed in v4.0.0
+* Added ability to pass optional decorator prop to DraftJSEditor, overriding the defaults if provided.
 
 ## v3.0.4
 * Remove onClick in wrapper div
